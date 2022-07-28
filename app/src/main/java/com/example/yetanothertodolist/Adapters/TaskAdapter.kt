@@ -10,7 +10,7 @@ import com.example.yetanothertodolist.databinding.TaskItemBinding
 import java.time.LocalDateTime
 
 enum class Importance{
-    Low, Common, Urgent
+    Low, Basic, Important
 }
 
 data class TodoItem(
