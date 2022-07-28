@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">YetAnotherToDoList</string>
     <string name="my_business">Мои дела</string>
-    <string name="completed">Выполнено - </string>
+    <string name="completed">Выполнено - %s</string>
 </resources>
