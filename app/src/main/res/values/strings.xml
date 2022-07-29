@@ -3,4 +3,14 @@
     <string name="my_business">Мои дела</string>
     <string name="completed">Выполнено - %s</string>
     <string name="save">СОХРАНИТЬ</string>
+    <string name="hint_add_fragment">Что надо сделать…</string>
+    <string name="importance">Важность</string>
+    <string name="delete">Удалить</string>
+    <string name="doBy">Сделать до</string>
+
+    <string-array name="importance">
+        <item>Стандартный</item>
+        <item>Низкий</item>
+        <item>!! Высокий</item>
+    </string-array>
 </resources>

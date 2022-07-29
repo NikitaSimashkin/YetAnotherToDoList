@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/back_primary"
     android:orientation="vertical"
     android:paddingTop="48dp">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:orientation="horizontal">
+        android:layout_height="24dp">
 
         <ImageButton
             android:id="@+id/close"
@@ -19,21 +19,126 @@
             android:layout_marginStart="16dp"
             android:background="@null"
             android:foregroundGravity="top"
-            android:gravity="start"
             android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            android:id="@+id/save"
+            android:layout_width="84dp"
             android:layout_height="match_parent"
+            android:layout_gravity="right"
             android:layout_marginEnd="16dp"
-            android:layout_weight="1"
             android:fontFamily="@font/roboto_medium"
-            android:gravity="center|right"
+            android:gravity="center"
             android:includeFontPadding="false"
             android:text="@string/save"
             android:textColor="@color/color_blue"
             android:textSize="14sp" />
+
+    </FrameLayout>
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/circle_shape"
+        android:backgroundTint="@color/back_secondary"
+        android:ems="10"
+        android:gravity="top|left"
+        android:hint="@string/hint_add_fragment"
+        android:inputType="textPersonName"
+        android:minHeight="104dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:textColorHint="@color/label_tertiary"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="28dp"
+        android:includeFontPadding="false"
+        android:text="@string/importance"
+        android:textColor="@color/label_primary"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="144dp"
+        android:layout_height="18dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="4dp"
+        android:background="@null"
+        android:dropDownWidth="wrap_content"
+        android:spinnerMode="dropdown" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/support_separator" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="26dp">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:includeFontPadding="false"
+            android:text="@string/doBy"
+            android:textColor="@color/label_primary"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch4"
+            style="@android:style/Widget.Material.Light.CompoundButton.Switch"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right" />
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="50dp"
+        android:background="@color/support_separator" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/delete_icon"
+            app:tint="@color/label_disable" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/delete" />
 
     </LinearLayout>
 

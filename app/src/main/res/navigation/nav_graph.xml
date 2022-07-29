@@ -8,5 +8,18 @@
         android:id="@+id/listFragment"
         android:name="com.example.yetanothertodolist.ListFragment"
         android:label="ListFragment"
-        tools:layout="@layout/list_fragment"/>
+        tools:layout="@layout/list_fragment">
+        <action
+            android:id="@+id/action_listFragment_to_addFragment"
+            app:destination="@id/addFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addFragment"
+        android:name="com.example.yetanothertodolist.AddFragment"
+        android:label="AddFragment"
+        tools:layout="@layout/add_fragment">
+        <action
+            android:id="@+id/action_addFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+    </fragment>
 </navigation>
