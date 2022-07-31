@@ -30,7 +30,6 @@ class ListFragment: Fragment(R.layout.list_fragment), CheckboxCallback{
         binding.recyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
         adapter.counter = 0
         binding.recyclerView.adapter = adapter
-        binding.flRecyclerView.clipChildren = false
 
         update() // считаем колво выполненных заданий
 
