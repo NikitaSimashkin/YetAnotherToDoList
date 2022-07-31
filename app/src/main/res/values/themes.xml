@@ -4,13 +4,32 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/color_white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondary">@color/color_green</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <!-- Диалоговое окно календаря -->
+    <style name="Calendar" parent="ThemeOverlay.AppCompat.Dialog">
+        <item name="colorAccent">@color/color_blue</item>
+        <item name="colorControlActivated">@color/color_blue</item>
+        <item name="colorControlHighlight">@color/color_blue</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/button_for_calendar</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/button_for_calendar</item>
+    </style>
+
+    <!-- Стиль для кнопки календаря-->
+    <style name="button_for_calendar" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/color_blue</item>
+    </style>
+
+    <!-- Switch -->
+    <style name="MySwitch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="colorControlActivated">@color/color_blue</item>
     </style>
 </resources>

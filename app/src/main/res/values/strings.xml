@@ -1,5 +1,18 @@
 <resources>
     <string name="app_name">YetAnotherToDoList</string>
     <string name="my_business">Мои дела</string>
-    <string name="completed">Выполнено - </string>
+    <string name="completed">Выполнено - %s</string>
+    <string name="save">СОХРАНИТЬ</string>
+    <string name="hint_add_fragment">Что надо сделать…</string>
+    <string name="importance">Важность</string>
+    <string name="delete">Удалить</string>
+    <string name="doBy">Сделать до</string>
+    <string name="cancel">ОТМЕНА</string>
+    <string name="ready">ГОТОВО</string>
+
+    <string-array name="importance">
+        <item>Низкая</item>
+        <item>Стандартная</item>
+        <item>!! Высокая</item>
+    </string-array>
 </resources>
