@@ -7,35 +7,29 @@
 
     <CheckBox
         android:id="@+id/checkBoxTask"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:keyboardNavigationCluster="false" />
 
     <TextView
         android:id="@+id/textViewTask"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="20dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="12dp"
+        android:layout_height="match_parent"
         android:layout_weight="6"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:maxLines="3"
-        android:minLines="1"
         android:ellipsize="end"
-        />
+        android:maxLines="3"
+        android:minHeight="20dp"
+        android:minLines="1"
+        android:paddingTop="12dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
 
     <ImageButton
         android:id="@+id/imageButtonTask"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
         android:background="@null"
         android:scaleType="center"
         app:srcCompat="@android:drawable/ic_menu_info_details" />

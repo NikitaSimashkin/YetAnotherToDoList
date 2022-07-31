@@ -1,42 +1,50 @@
 package com.example.yetanothertodolist
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.yetanothertodolist.Adapters.Importance
-import com.example.yetanothertodolist.Adapters.TaskAdapter
-import com.example.yetanothertodolist.Adapters.TodoItem
+import com.example.yetanothertodolist.Adapters.TodoAdapter
 import com.example.yetanothertodolist.databinding.ListFragmentBinding
-import java.time.LocalDateTime
 
-class ListFragment: Fragment(R.layout.list_fragment) {
+interface CheckboxCallback{
+    fun update()
+}
+
+class ListFragment: Fragment(R.layout.list_fragment), CheckboxCallback{
     private lateinit var binding: ListFragmentBinding
+    private lateinit var adapter: TodoAdapter
+
+    companion object{
+        val TASK_TAG = "Task"
+
+        val repository = TodoItemRepository()
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         binding = ListFragmentBinding.bind(view)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerView.adapter = TaskAdapter(TodoItemRepository.list)
+        adapter.counter = 0
+        binding.recyclerView.adapter = adapter
+        binding.flRecyclerView.clipChildren = false
 
-        binding.completed.text = String.format(resources.getString(R.string.completed), TodoItemRepository.list.count { it.isCompleted })
+        update() // считаем колво выполненных заданий
 
         binding.floatingActionButton.setOnClickListener {
-            openAddFragment()
+            findNavController().navigate(R.id.action_listFragment_to_addFragment, bundleOf(ListFragment.TASK_TAG to null))
         }
-
-
     }
 
-    private fun openAddFragment(){
-        findNavController().navigate(R.id.action_listFragment_to_addFragment)
+    override fun update() {
+        binding.completed.text = String.format(resources.getString(R.string.completed), repository.numberOfCompleted)
     }
 
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = TodoAdapter(this)
+    }
 }

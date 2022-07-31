@@ -4,30 +4,29 @@ import com.example.yetanothertodolist.Adapters.Importance
 import com.example.yetanothertodolist.Adapters.TodoItem
 import java.time.LocalDateTime
 
-object TodoItemRepository {
+class TodoItemRepository {
 
-    val list: MutableList<TodoItem> = arrayListOf(
-        TodoItem("123", "1", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "2", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "3", Importance.Basic, true, LocalDateTime.now()),
+    private val list: ArrayList<TodoItem> = arrayListOf(
+        TodoItem("123", "1", Importance.Low, true, LocalDateTime.now()),
+        TodoItem("123", "wrwerw2", Importance.Important, true, LocalDateTime.now()),
+        TodoItem("1sdfs23", "3", Importance.Basic, false, LocalDateTime.now()),
         TodoItem("123", "4", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "5", Importance.Basic, false, LocalDateTime.now()),
-        TodoItem("123", "6", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "7", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "8", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd9", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "10", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "11", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "12", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "13", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "14", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "15", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "16", Importance.Basic, true, LocalDateTime.now()),
-        TodoItem("123", "17", Importance.Basic, true, LocalDateTime.now()),
+        TodoItem("123", "5", Importance.Low, false, LocalDateTime.now()),
     )
 
     fun addItem(item: TodoItem){
         list.add(item)
+    }
+
+    fun removeItem(item: TodoItem){
+        list.remove(item)
+    }
+
+    val numberOfCompleted: Int
+        get() = list.count{it.isCompleted}
+
+    fun getList(): List<TodoItem>{
+        return list
     }
 
 }

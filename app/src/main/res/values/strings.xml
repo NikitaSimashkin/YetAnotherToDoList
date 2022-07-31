@@ -7,10 +7,12 @@
     <string name="importance">Важность</string>
     <string name="delete">Удалить</string>
     <string name="doBy">Сделать до</string>
+    <string name="cancel">ОТМЕНА</string>
+    <string name="ready">ГОТОВО</string>
 
     <string-array name="importance">
-        <item>Стандартный</item>
-        <item>Низкий</item>
-        <item>!! Высокий</item>
+        <item>Низкая</item>
+        <item>Стандартная</item>
+        <item>!! Высокая</item>
     </string-array>
 </resources>
