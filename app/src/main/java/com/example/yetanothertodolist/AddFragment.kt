@@ -108,7 +108,7 @@ class AddFragment : Fragment(R.layout.add_fragment) {
                 datePicker
             )
 
-            datePicker!!.setOnDateSetListener { view_, year, month, dayOfMonth ->
+            datePicker!!.setOnDateSetListener { _, year, month, dayOfMonth ->
                 setDate(year, month, dayOfMonth)
             }
             datePicker!!.setOnCancelListener {
