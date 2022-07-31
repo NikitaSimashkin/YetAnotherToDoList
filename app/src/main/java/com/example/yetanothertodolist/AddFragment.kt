@@ -67,15 +67,19 @@ class AddFragment : Fragment(R.layout.add_fragment) {
                 }
                 else -> {
                     val t = (task as TodoItem)
-                    t.description = binding.description.text.toString()
-                    t.importance = Importance.getImportance(binding.spinner.selectedItemId.toInt())
-                    t.dateOfChange = LocalDateTime.now()
-                    t.deadline = if (date.isNotEmpty()) LocalDate.of(
+                    val new_t = TodoItem(
+                    description = binding.description.text.toString(),
+                    importance = Importance.getImportance(binding.spinner.selectedItemId.toInt()),
+                    dateOfChange = LocalDateTime.now(),
+                    deadline = if (date.isNotEmpty()) LocalDate.of(
                         date.substring(0, 4).toInt(),
                         date.substring(5, 7).toInt(),
-                        date.substring(8).toInt()
-                    ) else null
+                        date.substring(8).toInt()) else null,
+                    id = t.id,
+                    isCompleted = t.isCompleted,
+                    dateOfCreation = t.dateOfCreation)
 
+                    ListFragment.repository.updateItem(new_t)
                     closeFragment()
                 }
             }
