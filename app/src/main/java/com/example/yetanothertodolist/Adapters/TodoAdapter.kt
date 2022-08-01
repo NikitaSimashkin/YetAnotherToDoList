@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.yetanothertodolist.CheckboxCallback
 import com.example.yetanothertodolist.ListFragment
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.databinding.TodoItemBinding
@@ -30,17 +30,37 @@ enum class Importance {
 
 data class TodoItem(
     val id: String,
-    var description: String,
-    var importance: Importance,
-    var isCompleted: Boolean,
+    val description: String,
+    val importance: Importance,
+    val isCompleted: Boolean,
     val dateOfCreation: Temporal,
-    var deadline: Temporal? = null,
-    var dateOfChange: Temporal? = null
+    val deadline: Temporal? = null,
+    val dateOfChange: Temporal? = null
 ) : Serializable
 
-class TodoAdapter(val fragment: CheckboxCallback) : RecyclerView.Adapter<TodoAdapter.TaskHolder>() {
+class MyDiffUtill(val oldList: List<TodoItem>, val newList: List<TodoItem>): DiffUtil.Callback(){
+    override fun getOldListSize(): Int = oldList.size
+
+    override fun getNewListSize(): Int = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val old = oldList[oldItemPosition]
+        val new = newList[newItemPosition]
+        return old.id == new.id
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val old = oldList[oldItemPosition]
+        val new = newList[newItemPosition]
+        return old == new
+    }
+
+}
+
+class TodoAdapter : RecyclerView.Adapter<TodoAdapter.TaskHolder>() {
     var counter = 0
-    val info: List<TodoItem> = ListFragment.repository.getList()
+
+    var info: List<TodoItem> = ArrayList(ListFragment.repository.tasks.value!!)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.todo_item, parent, false)
@@ -70,8 +90,8 @@ class TodoAdapter(val fragment: CheckboxCallback) : RecyclerView.Adapter<TodoAda
             checkCheckBox()
             checkBoxTask.setOnClickListener {
                 checkCheckBox()
-                data.isCompleted = checkBoxTask.isChecked
-                fragment.update() // обновляем кол-во выполненных заданий
+                changeIsCompleted(data)
+                println("\nrep     = ${ListFragment.repository.tasks.value?.toList()}\nadapter = ${info}\n")
             }
 
             val clickListener = View.OnClickListener {
@@ -79,10 +99,13 @@ class TodoAdapter(val fragment: CheckboxCallback) : RecyclerView.Adapter<TodoAda
                     R.id.action_listFragment_to_addFragment,
                     bundleOf(ListFragment.TASK_TAG to data)
                 )
-                println(data)
             }
             imageButtonTask.setOnClickListener(clickListener)
             textViewTask.setOnClickListener(clickListener)
+        }
+
+        private fun changeIsCompleted(item: TodoItem) {
+            ListFragment.repository.updateItem(item.copy(isCompleted = item.isCompleted.not()))
         }
 
         private fun checkCheckBox() = with(binding) {
