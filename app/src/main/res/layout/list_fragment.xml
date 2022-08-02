@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/back_primary">
@@ -17,18 +18,21 @@
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingtoolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/back_primary"
                 app:layout_collapseMode="pin" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/remove_letter"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -54,6 +58,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <LinearLayout
+            android:id="@+id/completed_eye"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="60dp"
@@ -84,6 +89,7 @@
 
     <androidx.core.widget.NestedScrollView
 
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="18dp"
@@ -92,6 +98,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recycler_space"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipChildren="false">
@@ -102,6 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/back_secondary_with_corners"
                 android:clipToPadding="false"
@@ -116,8 +124,9 @@
             </androidx.recyclerview.widget.RecyclerView>
 
             <FrameLayout
+                android:id="@+id/space"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="100dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerView">
@@ -133,7 +142,7 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|right"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="22dp"
         android:backgroundTint="@color/color_blue"
         android:clickable="true"
         android:src="@drawable/icon_add"

@@ -32,4 +32,5 @@
     <style name="MySwitch" parent="Widget.AppCompat.CompoundButton.Switch">
         <item name="colorControlActivated">@color/color_blue</item>
     </style>
+
 </resources>

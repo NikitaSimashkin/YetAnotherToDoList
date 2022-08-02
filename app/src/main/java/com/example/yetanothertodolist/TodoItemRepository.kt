@@ -2,15 +2,15 @@ package com.example.yetanothertodolist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.yetanothertodolist.Adapters.Importance
-import com.example.yetanothertodolist.Adapters.TodoItem
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.Importance
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.TodoItem
 import java.time.LocalDateTime
 
 class TodoItemRepository {
 
     private val _tasks = MutableLiveData<List<TodoItem>>(arrayListOf(
         TodoItem("1", "1", Importance.Low, true, LocalDateTime.now()),
-        TodoItem("2", "2", Importance.Important, true, LocalDateTime.now()),
+        TodoItem("2", "2", Importance.Important, false, LocalDateTime.now()),
         TodoItem("3", "3", Importance.Basic, false, LocalDateTime.now()),
         TodoItem("4", "4", Importance.Basic, true, LocalDateTime.now()),
         TodoItem("5", "fsfsfsdfsdfsddddddddddddd5", Importance.Low, false, LocalDateTime.now()),

@@ -20,8 +20,6 @@ class ImportanceAdapter(context: Context, resource: Int, textViewResourceId: Int
         addAll(list)
     }
 
-    override fun getCount(): Int = list.size
-
 
     // метод для выбранного из выпадающего списка view
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -48,7 +46,7 @@ class ImportanceAdapter(context: Context, resource: Int, textViewResourceId: Int
 
         when (position){
             0, 1->{
-                changeColor(view, R.id.spinner_item, R.color.label_tertiary)
+                changeColor(view, R.id.spinner_item, R.color.label_primary)
             }
             list.size-1->{
                 changeColor(view, R.id.spinner_item, R.color.color_red)

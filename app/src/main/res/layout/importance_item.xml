@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="144dp"
     android:layout_height="48dp"
-    android:paddingLeft="16dp">
+    android:paddingStart="16dp">
 
     <TextView
         android:id="@+id/spinner_item"
@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:includeFontPadding="false"
-        android:text="TextView"
         android:textColor="@color/label_primary"
         android:textSize="16sp" />
 </FrameLayout>

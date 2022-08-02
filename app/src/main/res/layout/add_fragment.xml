@@ -2,6 +2,7 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_add"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/back_primary">
@@ -11,21 +12,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingTop="48dp">
+        android:paddingTop="40dp">
 
         <FrameLayout
             android:id="@+id/actionbar"
             android:layout_width="match_parent"
-            android:layout_height="24dp">
+            android:layout_height="wrap_content">
 
             <ImageButton
                 android:id="@+id/close"
-                android:layout_width="24dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
                 android:background="@null"
                 android:foregroundGravity="top"
-                android:src="@android:drawable/ic_menu_close_clear_cancel" />
+                android:padding="5dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/label_primary" />
 
             <TextView
                 android:id="@+id/save"
@@ -47,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="16dp"
             android:background="@drawable/back_secondary_with_corners"
             android:breakStrategy="high_quality"
@@ -62,35 +65,42 @@
             android:textColorHint="@color/label_tertiary"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/textView2"
+        <LinearLayout
+            android:id="@+id/spinner_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="28dp"
-            android:includeFontPadding="false"
-            android:text="@string/importance"
-            android:textColor="@color/label_primary"
-            android:textSize="16sp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="144dp"
-            android:layout_height="18dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:background="@null"
-            android:dropDownWidth="wrap_content"
-            android:spinnerMode="dropdown" />
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="28dp"
+                android:includeFontPadding="false"
+                android:text="@string/importance"
+                android:textColor="@color/label_primary"
+                android:textSize="16sp" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            android:background="@color/support_separator" />
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="144dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:background="@null"
+                android:dropDownWidth="wrap_content"
+                android:spinnerMode="dropdown" />
+
+            <View
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/support_separator" />
+        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/calendar"
@@ -145,7 +155,7 @@
 
         </FrameLayout>
 
-        <ImageView
+        <View
             android:id="@+id/line"
             android:layout_width="match_parent"
             android:layout_height="1dp"

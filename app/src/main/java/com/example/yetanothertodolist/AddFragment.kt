@@ -3,11 +3,12 @@ package com.example.yetanothertodolist
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.yetanothertodolist.Adapters.Importance
 import com.example.yetanothertodolist.Adapters.ImportanceAdapter
-import com.example.yetanothertodolist.Adapters.TodoItem
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.Importance
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.TodoItem
 import com.example.yetanothertodolist.databinding.AddFragmentBinding
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -26,20 +27,22 @@ class AddFragment : Fragment(R.layout.add_fragment) {
         val arrayAdapter =
             context?.let { ImportanceAdapter(it, R.layout.importance_item, R.id.spinner_item) }
         binding.spinner.adapter = arrayAdapter
+        binding.spinnerLayout.setOnClickListener {
+            binding.spinner.performClick()
+        }
 
         // настройка работы выбора/смены даты
         binding.calendarSwitch.isClickable = false
         binding.setDateClickListener.setOnClickListener {
-            if (binding.date.text.isEmpty()) {
-                showDatePicker(view)
-            } else {
-                binding.date.text = ""
-            }
-            switch()
+            selectDate(view)
         }
+
         binding.changeDateClickListener.setOnClickListener {
             if (binding.date.text.isNotEmpty())
                 showDatePicker(view)
+            else {
+                selectDate(view)
+            }
         }
 
         val task: Any? = requireArguments().get(ListFragment.TASK_TAG) // редактируемое задание
@@ -59,28 +62,33 @@ class AddFragment : Fragment(R.layout.add_fragment) {
 
         binding.save.setOnClickListener {
             val date = binding.date.text.toString()
-
-            when (task) {
-                null -> {
-                    if (addTask())
+            if (binding.description.text.isEmpty()){
+                Toast.makeText(view.context, R.string.save_error, Toast.LENGTH_SHORT).show()
+            } else {
+                when (task) {
+                    null -> {
+                        addTask()
                         closeFragment()
-                }
-                else -> {
-                    val t = (task as TodoItem)
-                    val new_t = TodoItem(
-                    description = binding.description.text.toString(),
-                    importance = Importance.getImportance(binding.spinner.selectedItemId.toInt()),
-                    dateOfChange = LocalDateTime.now(),
-                    deadline = if (date.isNotEmpty()) LocalDate.of(
-                        date.substring(0, 4).toInt(),
-                        date.substring(5, 7).toInt(),
-                        date.substring(8).toInt()) else null,
-                    id = t.id,
-                    isCompleted = t.isCompleted,
-                    dateOfCreation = t.dateOfCreation)
+                    }
+                    else -> {
+                        val t = (task as TodoItem)
+                        val newT = TodoItem(
+                            description = binding.description.text.toString(),
+                            importance = Importance.getImportance(binding.spinner.selectedItemId.toInt()),
+                            dateOfChange = LocalDateTime.now(),
+                            deadline = if (date.isNotEmpty()) LocalDate.of(
+                                date.substring(0, 4).toInt(),
+                                date.substring(5, 7).toInt(),
+                                date.substring(8).toInt()
+                            ) else null,
+                            id = t.id,
+                            isCompleted = t.isCompleted,
+                            dateOfCreation = t.dateOfCreation
+                        )
 
-                    ListFragment.repository.updateItem(new_t)
-                    closeFragment()
+                        ListFragment.repository.updateItem(newT)
+                        closeFragment()
+                    }
                 }
             }
         }
@@ -132,8 +140,7 @@ class AddFragment : Fragment(R.layout.add_fragment) {
         binding.calendarSwitch.isChecked = !binding.calendarSwitch.isChecked
     }
 
-    private fun addTask(): Boolean {
-        if (binding.description.text.isNotEmpty()) {
+    private fun addTask(){
             val date = binding.date.text.toString()
 
             ListFragment.repository.addItem(
@@ -151,10 +158,6 @@ class AddFragment : Fragment(R.layout.add_fragment) {
                     ) else null
                 )
             )
-
-            return true
-        }
-        return false
     }
 
     private fun removeTask(item: TodoItem) {
@@ -163,6 +166,15 @@ class AddFragment : Fragment(R.layout.add_fragment) {
 
     private fun closeFragment() {
         findNavController().popBackStack()
+    }
+
+    private fun selectDate(view: View){
+        if (binding.date.text.isEmpty()) {
+            showDatePicker(view)
+        } else {
+            binding.date.text = ""
+        }
+        switch()
     }
 
 }

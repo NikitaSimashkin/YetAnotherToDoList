@@ -9,6 +9,7 @@
     <string name="doBy">Сделать до</string>
     <string name="cancel">ОТМЕНА</string>
     <string name="ready">ГОТОВО</string>
+    <string name="save_error">Необходимо добавить описание</string>
 
     <string-array name="importance">
         <item>Низкая</item>
