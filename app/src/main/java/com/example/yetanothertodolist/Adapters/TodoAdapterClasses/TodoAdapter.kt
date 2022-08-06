@@ -7,20 +7,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.os.bundleOf
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.Importance
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.MyInternetException
 import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.TodoItem
 import com.example.yetanothertodolist.ListFragment
+import com.example.yetanothertodolist.MainActivity
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.databinding.TodoItemBinding
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.withLock
+import kotlin.coroutines.coroutineContext
 
 
 class TodoAdapter : RecyclerView.Adapter<TodoAdapter.TaskHolder>() {
 
     var info: List<TodoItem> = listOf()
-    // var info: List<TodoItem> = ListFragment.repository.tasks.value!!
+
+    lateinit var containerForSnackBar: View
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.todo_item, parent, false)
@@ -33,6 +43,8 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.TaskHolder>() {
 
     override fun getItemCount(): Int = info.size
 
+
+    private val map = HashMap<String, Job>() // для метода changeIsCompleted
 
     inner class TaskHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var binding: TodoItemBinding = TodoItemBinding.bind(itemView)
@@ -56,10 +68,9 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.TaskHolder>() {
             checkBoxTask.setOnClickListener {
                 changeTextStyle()
                 changeIsCompleted(data)
-                // println("\nrep =     ${ListFragment.repository.tasks.value?.toList()}\nadapter = $info")
             }
 
-            val openAddFragment: View.OnClickListener = View.OnClickListener{
+            val openAddFragment: View.OnClickListener = View.OnClickListener {
                 itemView.findNavController().navigate(
                     R.id.action_listFragment_to_addFragment,
                     bundleOf(ListFragment.TASK_TAG to data)
@@ -80,7 +91,7 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.TaskHolder>() {
                     binding.checkBoxTask.buttonTintList =
                         ColorStateList(states, colorsForLowAndBasic)
                     binding.iconImportance.background = null
-                   // setPaddingLeft(0f)
+                    // setPaddingLeft(0f)
                 }
                 Importance.Important -> {
                     binding.checkBoxTask.buttonTintList = ColorStateList(states, colorsForImportant)
@@ -88,7 +99,7 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.TaskHolder>() {
                 }
             }
 
-            if (data.deadline != null){
+            if (data.deadline != null) {
                 val lp = binding.datelayout.layoutParams
                 lp.height = WindowManager.LayoutParams.WRAP_CONTENT
                 binding.dateText.text = data.deadline.toString()
@@ -99,8 +110,35 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.TaskHolder>() {
             }
         }
 
+        /*
+        onlyOneCoroutineScope, как следует из названия, может запускать только одну корутину для каждого задания
+        Это сделано для того, чтобы стабилизировать поведение программы, когда пользователь включает
+        режим тестировщика и меняет миллион раз чекбокс, оттого у нас получаются бесполезные корутины
+         */
         private fun changeIsCompleted(item: TodoItem) {
-            ListFragment.repository.updateItem(item.copy(isCompleted = item.isCompleted.not()))
+            MainActivity.scope.launch(Dispatchers.IO) {
+                ListFragment.repository.mutex.withLock {
+                    if (map.containsKey(item.id) && !map[item.id]!!.isCancelled) {
+                        map[item.id]!!.cancel()
+                    }
+                    map[item.id] =
+                        launch(Dispatchers.IO) {
+                            try {
+                                ListFragment.repository.updateItem(item.copy(isCompleted = binding.checkBoxTask.isChecked))
+                            } catch (e: MyInternetException) {
+
+                                Snackbar.make(
+                                    containerForSnackBar,
+                                    itemView.context.getText(R.string.internet_error),
+                                    Snackbar.LENGTH_SHORT
+                                ).setAction(
+                                    "OK"
+                                ) {}.show()
+                            }
+                        }
+
+                }
+            }
         }
 
         private fun changeTextStyle() = with(binding) {
@@ -114,13 +152,4 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.TaskHolder>() {
             }
         }
     }
-}
-
-
-fun dpFromPx(context: Context, px: Float): Float {
-    return px / context.resources.displayMetrics.density
-}
-
-fun pxFromDp(context: Context, dp: Float): Float {
-    return dp * context.resources.displayMetrics.density
 }
