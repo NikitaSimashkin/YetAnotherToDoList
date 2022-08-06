@@ -10,6 +10,7 @@
     <string name="cancel">ОТМЕНА</string>
     <string name="ready">ГОТОВО</string>
     <string name="save_error">Необходимо добавить описание</string>
+    <string name="internet_error">Произошла ошибка при попытке изменить список задач</string>
 
     <string-array name="importance">
         <item>Низкая</item>
