@@ -1,34 +1,61 @@
-package com.example.yetanothertodolist
+package com.example.yetanothertodolist.Fragments
 
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.yetanothertodolist.Adapters.ImportanceAdapter
-import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.Importance
-import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.MyInternetException
-import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.TodoItem
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.*
+import com.example.yetanothertodolist.MainActivity
+import com.example.yetanothertodolist.R
+import com.example.yetanothertodolist.TodoItemRepository
+import com.example.yetanothertodolist.YetAnotherApplication
 import com.example.yetanothertodolist.databinding.AddFragmentBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.withLock
+import java.lang.NullPointerException
+import java.net.UnknownHostException
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
+import java.util.*
+
+enum class Action {
+    Remove, Update, Add
+}
 
 class AddFragment : Fragment(R.layout.add_fragment) {
 
     private lateinit var binding: AddFragmentBinding
     private lateinit var containerForSnackBar: View
+    private lateinit var repository: TodoItemRepository
     private var datePicker: DatePickerDialog? = null
+    private lateinit var snackBar: Snackbar
+
+    companion object {
+        lateinit var retry: String
+        lateinit var revisionError: String
+        lateinit var elementNotFount: String
+        lateinit var unknownError: String
+        lateinit var later: String
+        lateinit var noInternet: String
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding = AddFragmentBinding.bind(view)
         containerForSnackBar = requireActivity().findViewById(R.id.main_root)
+        snackBar = Snackbar.make(
+            containerForSnackBar,
+            containerForSnackBar.context.getText(R.string.elementNotFoundError),
+            Snackbar.LENGTH_LONG
+        )
+        repository = (requireActivity().application as YetAnotherApplication).repository
+
+
         closeButtonSetUp()
 
         spinnerSetUp()
@@ -36,6 +63,9 @@ class AddFragment : Fragment(R.layout.add_fragment) {
         calendarSetUp()
 
         val task: Any? = requireArguments().get(ListFragment.TASK_TAG) // редактируемое задание
+        if (task != null) {
+            setTask(task as TodoItem)
+        }
         deleteButtonSetUp(task)
         saveButtonSetUp(view, task)
 
@@ -70,10 +100,9 @@ class AddFragment : Fragment(R.layout.add_fragment) {
 
     private fun deleteButtonSetUp(task: Any?) {
         if (task != null) {
-            setTask(task as TodoItem)
             binding.delete.setOnClickListener {
                 binding.delete.isClickable = false
-                removeTask(task)
+                removeTask(task as TodoItem)
             }
         } else {
             val color =
@@ -113,21 +142,7 @@ class AddFragment : Fragment(R.layout.add_fragment) {
     }
 
     private fun updateTask(newTask: TodoItem) {
-        MainActivity.scope.launch(Dispatchers.IO) {
-            try {
-                ListFragment.repository.mutex.withLock {
-                    ListFragment.repository.updateItem(newTask)
-                }
-            } catch (e: MyInternetException) {
-                Snackbar.make(
-                    containerForSnackBar,
-                    containerForSnackBar.context.getText(R.string.internet_error),
-                    Snackbar.LENGTH_SHORT
-                ).setAction(
-                    "OK"
-                ) {}.show()
-            }
-        }
+        changeRepository(Action.Update, newTask)
         closeFragment()
     }
 
@@ -136,15 +151,15 @@ class AddFragment : Fragment(R.layout.add_fragment) {
         return TodoItem(
             description = binding.description.text.toString(),
             importance = Importance.getImportance(binding.spinner.selectedItemId.toInt()),
-            dateOfChange = LocalDateTime.now(),
-            deadline = if (date.isNotEmpty()) LocalDate.of(
-                date.substring(0, 4).toInt(),
-                date.substring(5, 7).toInt(),
-                date.substring(8).toInt()
+            changedAt = LocalDateTime.now(),
+            deadline = if (date.isNotEmpty()) LocalDateTime.of(
+                LocalDate.parse(date),
+                LocalTime.of(0, 0, 0)
             ) else null,
             id = oldTask.id,
-            isCompleted = oldTask.isCompleted,
-            dateOfCreation = oldTask.dateOfCreation
+            done = oldTask.done,
+            createdAt = oldTask.createdAt,
+            lastUpdateBy = oldTask.lastUpdateBy
         )
     }
 
@@ -153,7 +168,7 @@ class AddFragment : Fragment(R.layout.add_fragment) {
         binding.spinner.setSelection(task.importance.ordinal)
 
         if (task.deadline != null) {
-            binding.dateAddFragment.text = task.deadline.toString()
+            binding.dateAddFragment.text = task.deadline.toLocalDate().toString()
             binding.calendarSwitch.isChecked = true
         }
     }
@@ -169,7 +184,7 @@ class AddFragment : Fragment(R.layout.add_fragment) {
             )
             datePicker!!.setButton(
                 DatePickerDialog.BUTTON_NEGATIVE,
-                requireContext().resources.getText(R.string.cancel),
+                resources.getText(R.string.cancel),
                 datePicker
             )
 
@@ -194,55 +209,78 @@ class AddFragment : Fragment(R.layout.add_fragment) {
     }
 
     private fun addTask() {
+
         val date = binding.dateAddFragment.text.toString()
         val newTask = TodoItem(
-            (Math.random() * 100 + 1).toString(),
-            binding.description.text.toString(),
-            Importance.getImportance(binding.spinner.selectedItemId.toInt()),
-            false,
-            LocalDateTime.now(),
-            if (date.isNotEmpty()) LocalDate.of(
-                date.substring(0, 4).toInt(),
-                date.substring(5, 7).toInt(),
-                date.substring(8).toInt()
-            ) else null
+            id = UUID.randomUUID().toString(),
+            description = binding.description.text.toString(),
+            importance = Importance.getImportance(binding.spinner.selectedItemId.toInt()),
+            done = false,
+            createdAt = LocalDateTime.now(),
+            deadline = if (date.isNotEmpty()) LocalDateTime.of(
+                LocalDate.parse(date),
+                LocalTime.of(0, 0, 0)
+            ) else null,
+            lastUpdateBy = "Me",
+            changedAt = LocalDateTime.now()
         )
 
-        MainActivity.scope.launch(Dispatchers.IO) {
-            try {
-                ListFragment.repository.mutex.withLock {
-                    ListFragment.repository.addItem(newTask)
-                }
-            } catch (e: MyInternetException) {
-                Snackbar.make(
-                    containerForSnackBar,
-                    containerForSnackBar.context.getText(R.string.internet_error),
-                    Snackbar.LENGTH_SHORT
-                ).setAction(
-                    "OK"
-                ) {}.show()
-            }
-        }
+        changeRepository(Action.Add, newTask)
+
         closeFragment()
     }
 
     private fun removeTask(item: TodoItem) {
-        MainActivity.scope.launch (Dispatchers.IO){
+        changeRepository(Action.Remove, item)
+        closeFragment()
+    }
+
+    // add/update/delete
+    private fun changeRepository(
+        action: Action,
+        item: TodoItem
+    ) {
+        MainActivity.scope.launch(Dispatchers.IO) {
             try {
-                ListFragment.repository.mutex.withLock {
-                    ListFragment.repository.removeItem(item)
+                when (action) {
+                    Action.Add -> repository.addItem(item)
+                    Action.Remove -> repository.removeItem(item)
+                    Action.Update -> repository.updateItem(item)
                 }
-            } catch (e: MyInternetException) {
-                Snackbar.make(
-                    containerForSnackBar,
-                    containerForSnackBar.context.getText(R.string.internet_error),
-                    Snackbar.LENGTH_SHORT
-                ).setAction(
-                    "OK"
-                ) {}.show()
+
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    when (e) {
+                        is FourZeroZeroException -> {
+                            snackBar.setText(revisionError)
+                        }
+                        is FourZeroFourException -> {
+                            snackBar.setText(elementNotFount)
+                        }
+                        is FourZeroOneException, is FiveZeroZeroException -> {
+                            snackBar.setText(unknownError)
+                        }
+                        is UnknownHostException -> {
+                            snackBar.setText(noInternet)
+                        }
+                    }
+
+                    snackBar.setAction(retry) {
+                        MainActivity.scope.launch(Dispatchers.IO) {
+                            try {
+                                when (action) {
+                                    Action.Add -> repository.addServerElement(item)
+                                    Action.Remove -> repository.deleteServerElement(item.id)
+                                    Action.Update -> repository.updateServerElement(item)
+                                }
+                            } catch(e: Exception){
+                                Snackbar.make(containerForSnackBar, later, Snackbar.LENGTH_LONG).show()
+                            }
+                        }
+                    }.show()
+                }
             }
         }
-        closeFragment()
     }
 
     private fun closeFragment() {
@@ -263,5 +301,4 @@ class AddFragment : Fragment(R.layout.add_fragment) {
         outState.putString("Date", binding.dateAddFragment.text.toString())
 
     }
-
 }

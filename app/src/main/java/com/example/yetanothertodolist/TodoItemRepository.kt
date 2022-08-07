@@ -1,100 +1,122 @@
 package com.example.yetanothertodolist
 
-import android.content.Context
-import android.content.ReceiverCallNotAllowedException
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.Importance
-import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.MyInternetException
-import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.TodoItem
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.*
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.MyInternetException.*
+import com.example.yetanothertodolist.Backend.Converter
+import com.example.yetanothertodolist.Backend.ServerList
+import com.example.yetanothertodolist.Backend.ServerOneElement
+import com.example.yetanothertodolist.Backend.YetAnotherAPI
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
-import java.time.LocalDateTime
-import kotlin.random.Random
+import kotlinx.coroutines.sync.withLock
 
-class TodoItemRepository {
 
-    private val _tasks = MutableLiveData<List<TodoItem>>(
-        arrayListOf(
-            TodoItem("1", "1", Importance.Low, true, LocalDateTime.now()),
-            TodoItem("2", "2", Importance.Important, false, LocalDateTime.now()),
-            TodoItem("3", "3", Importance.Basic, false, LocalDateTime.now()),
-            TodoItem("4", "4", Importance.Basic, true, LocalDateTime.now()),
-            TodoItem("5", "fsfsfsdfsdfsddddddddddddd5", Importance.Low, false, LocalDateTime.now()),
-            TodoItem("6", "1", Importance.Low, true, LocalDateTime.now()),
-            TodoItem("7", "wrwerw2", Importance.Important, true, LocalDateTime.now()),
-            TodoItem("8", "3", Importance.Basic, false, LocalDateTime.now()),
-            TodoItem("9", "4", Importance.Basic, true, LocalDateTime.now()),
-            TodoItem("10", "5", Importance.Low, false, LocalDateTime.now()),
-            TodoItem("11", "1", Importance.Low, true, LocalDateTime.now()),
-            TodoItem("12", "wrwerw2", Importance.Important, true, LocalDateTime.now()),
-            TodoItem("13", "3", Importance.Basic, false, LocalDateTime.now()),
-            TodoItem("14", "4", Importance.Basic, true, LocalDateTime.now()),
-            TodoItem(
-                "15",
-                "5aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                Importance.Low,
-                false,
-                LocalDateTime.now()
-            ),
-            TodoItem("16", "1", Importance.Low, true, LocalDateTime.now()),
-            TodoItem("17", "wrwerw2", Importance.Important, true, LocalDateTime.now()),
-            TodoItem("18", "3", Importance.Basic, false, LocalDateTime.now()),
-            TodoItem("19", "4", Importance.Basic, true, LocalDateTime.now()),
-            TodoItem("20", "5", Importance.Low, false, LocalDateTime.now()),
-            TodoItem(
-                "21",
-                "1ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-                Importance.Low,
-                true,
-                LocalDateTime.now()
-            ),
-            TodoItem("22", "wrwerw2", Importance.Important, true, LocalDateTime.now()),
-            TodoItem("23", "3", Importance.Basic, false, LocalDateTime.now()),
-            TodoItem("24", "4", Importance.Basic, true, LocalDateTime.now()),
-            TodoItem("25", "5", Importance.Low, false, LocalDateTime.now()),
-        )
-    )
+class TodoItemRepository(private val api: YetAnotherAPI) {
+
+    private val _tasks = MutableLiveData<List<TodoItem>>(ArrayList<TodoItem>())
+    var internet : MutableLiveData<Boolean>? = null
 
     val tasks: LiveData<List<TodoItem>> = _tasks
     val mutex = Mutex()
 
+    var lastRevision = 12L
+
     suspend fun addItem(item: TodoItem) {
-        val newList: MutableList<TodoItem> = ArrayList(_tasks.value as List<TodoItem>)
-        newList.add(item)
-        _tasks.postValue(newList)
+        mutex.withLock {
+            val newList: MutableList<TodoItem> = ArrayList(_tasks.value as List<TodoItem>)
+            newList.add(item)
+            _tasks.postValue(newList)
 
-        delay(1000L)
-        if (Random.nextBoolean())
-            throw MyInternetException()
+            addServerElement(item)
+        }
     }
 
-    suspend fun removeItem(item: TodoItem) {
+    suspend fun removeItem(item: TodoItem) = mutex.withLock{
         val newList: MutableList<TodoItem> = ArrayList(_tasks.value as List<TodoItem>)
-        newList.remove(item)
+        newList.removeIf { it.id == item.id }
         _tasks.postValue(newList)
 
-        delay(1000L)
-        if (Random.nextBoolean())
-            throw MyInternetException()
+        deleteServerElement(item.id)
     }
 
-    suspend fun updateItem(item: TodoItem) {
+    suspend fun updateItem(item: TodoItem) = mutex.withLock{
         val newList: MutableList<TodoItem> = ArrayList(_tasks.value as List<TodoItem>)
         val element = newList.find { it.id == item.id }
         val indexOf = newList.indexOf(element)
         newList[indexOf] = item
         _tasks.postValue(newList)
+        println(2)
+        updateServerElement(item)
+    }
 
-        delay(1000L)
-        println("Запрос на сервер")
-        println(item.isCompleted)
-        if (Random.nextBoolean())
-            throw MyInternetException()
+    suspend fun getServerList() = mutex.withLock{
+        val body = api.getList().body()
+        _tasks.postValue(body!!.list.map { Converter.getTodoItem(it) })
+        lastRevision = body.revision!!
+    }
+
+    suspend fun updateServerList() = mutex.withLock{
+        val body = api.updateServerList(lastRevision, ServerList(
+            "ok",
+            _tasks.value!!.map { Converter.getServerTodoItem(it) }
+        )).body()
+
+        lastRevision = body!!.revision!!
+        _tasks.postValue(body.list.map { Converter.getTodoItem(it) })
+    }
+
+    private suspend fun getServerElement(id: String): TodoItem {
+        val response = api.getElement(id)
+        checkError(response.code())
+        return Converter.getTodoItem(response.body()!!.element)
+    }
+
+    suspend fun addServerElement(item: TodoItem, withoutError: Boolean = false) {
+        val body = api.addElement(
+            lastRevision, ServerOneElement(
+                "ok",
+                Converter.getServerTodoItem(item)
+            )
+        )
+        if (!withoutError)
+            checkError(body.code())
+        lastRevision = body.body()!!.revision!!
+    }
+
+    suspend fun updateServerElement(item: TodoItem, withoutError: Boolean = false) {
+        val body = api.changeElement(
+            lastRevision,
+            item.id,
+            ServerOneElement(
+                "ok",
+                Converter.getServerTodoItem(item)
+            )
+        )
+        if (!withoutError)
+            checkError(body.code())
+        lastRevision = body.body()!!.revision!!
+    }
+
+    suspend fun deleteServerElement(id: String, withoutError: Boolean = false){
+        val body = api.deleteElement(lastRevision, id)
+
+        if (!withoutError)
+            checkError(body.code())
+        lastRevision = body.body()!!.revision!!
+    }
+
+    private suspend fun checkError(code: Int){
+        when (code){
+            400 -> throw FourZeroZeroException()
+            401 -> throw FourZeroOneException()
+            404 -> throw FourZeroFourException()
+            500 -> throw FiveZeroZeroException()
+        }
     }
 
     val numberOfCompleted: Int
-        get() = _tasks.value?.count { it.isCompleted } ?: 0
+        get() = _tasks.value?.count { it.done } ?: 0
 
 }

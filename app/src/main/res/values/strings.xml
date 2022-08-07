@@ -11,6 +11,13 @@
     <string name="ready">ГОТОВО</string>
     <string name="save_error">Необходимо добавить описание</string>
     <string name="internet_error">Произошла ошибка при попытке изменить список задач</string>
+    <string name="elementNotFoundError">Такого элемента нет на сервере</string>
+    <string name="revisionError">Локальный список задач не синхронизирован с сервером</string>
+    <string name="unknownError">Что-то пошло не так</string>
+    <string name="retry">Повторить</string>
+    <string name="noInternet">Отсуствует соединение с интернетом</string>
+    <string name="yesInternet">Интернет подключен</string>
+    <string name="later">Попробуйте позже</string>
 
     <string-array name="importance">
         <item>Низкая</item>
