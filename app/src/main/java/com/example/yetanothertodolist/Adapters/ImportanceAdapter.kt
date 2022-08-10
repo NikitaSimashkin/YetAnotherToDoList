@@ -8,12 +8,13 @@ import android.widget.TextView
 import com.example.yetanothertodolist.R
 
 
-/*
-Адаптер для выпадающего списка на AddFragment
+/**
+ * Адаптер для выпадающего списка на AddFragment
  */
 class ImportanceAdapter(context: Context, resource: Int, textViewResourceId: Int) :
     ArrayAdapter<String>(context, resource, textViewResourceId) {
 
+    // почему это публичный var? Им никто не пользуется, эту переменную можно вообще заинлайнить
     var list: List<String> = context.resources.getStringArray(R.array.importance).toList()
 
     init{
@@ -48,7 +49,7 @@ class ImportanceAdapter(context: Context, resource: Int, textViewResourceId: Int
             0, 1->{
                 changeColor(view, R.id.spinner_item, R.color.label_primary)
             }
-            list.size-1->{
+            list.size-1->{ // подумай, как избавиться от дублирования логики с getView
                 changeColor(view, R.id.spinner_item, R.color.color_red)
             }
         }

@@ -2,11 +2,8 @@ package com.example.yetanothertodolist.Backend
 
 import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.Importance
 import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.TodoItem
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.ZoneOffset
-import java.util.*
 
 class Converter private constructor(){
     companion object{

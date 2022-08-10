@@ -7,21 +7,26 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.yetanothertodolist.Adapters.ImportanceAdapter
-import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.*
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.FiveZeroZeroException
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.FourZeroFourException
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.FourZeroOneException
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.FourZeroZeroException
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.Importance
+import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.TodoItem
 import com.example.yetanothertodolist.MainActivity
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.TodoItemRepository
 import com.example.yetanothertodolist.YetAnotherApplication
 import com.example.yetanothertodolist.databinding.AddFragmentBinding
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.*
-import kotlinx.coroutines.sync.withLock
-import java.lang.NullPointerException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.util.*
+import java.util.UUID
 
 enum class Action {
     Remove, Update, Add
@@ -47,9 +52,10 @@ class AddFragment : Fragment(R.layout.add_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding = AddFragmentBinding.bind(view)
-        containerForSnackBar = requireActivity().findViewById(R.id.main_root)
+        containerForSnackBar = requireActivity().findViewById(R.id.main_root) // надеюсь, логика про снекбар уедет в отдельный класс, а не будет размазана по нескольким
         snackBar = Snackbar.make(
-            containerForSnackBar,
+            containerForSnackBar, // кстати в этом случае снекбар относится только к этому экрану,
+            // его нужно привязывать вьюшке этого фрагмента, чтобы он скрывался при уходе с экрана
             containerForSnackBar.context.getText(R.string.elementNotFoundError),
             Snackbar.LENGTH_LONG
         )
@@ -73,7 +79,7 @@ class AddFragment : Fragment(R.layout.add_fragment) {
     }
 
     private fun setSavedDate(savedInstanceState: Bundle?) {
-        if (savedInstanceState?.getString("Date") != null) {
+        if (savedInstanceState?.getString("Date") != null) { // должно уехать во вьюмодель
             binding.dateAddFragment.text = savedInstanceState.getString("Date")
         }
     }
@@ -98,7 +104,7 @@ class AddFragment : Fragment(R.layout.add_fragment) {
         }
     }
 
-    private fun deleteButtonSetUp(task: Any?) {
+    private fun deleteButtonSetUp(task: Any?) { // почему не (TodoItem?)? Лучше не использовать Any вообще нигде
         if (task != null) {
             binding.delete.setOnClickListener {
                 binding.delete.isClickable = false
@@ -153,7 +159,7 @@ class AddFragment : Fragment(R.layout.add_fragment) {
             importance = Importance.getImportance(binding.spinner.selectedItemId.toInt()),
             changedAt = LocalDateTime.now(),
             deadline = if (date.isNotEmpty()) LocalDateTime.of(
-                LocalDate.parse(date),
+                LocalDate.parse(date), // круто, что поправил
                 LocalTime.of(0, 0, 0)
             ) else null,
             id = oldTask.id,

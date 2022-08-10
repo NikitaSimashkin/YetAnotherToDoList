@@ -1,38 +1,22 @@
 package com.example.yetanothertodolist.Fragments
 
-import android.content.Context.CONNECTIVITY_SERVICE
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET
-import android.net.NetworkRequest
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yetanothertodolist.Adapters.TodoAdapter
-import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.Importance
 import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.TodoAdapterDiffUtil
 import com.example.yetanothertodolist.Adapters.TodoAdapterClasses.TodoItem
-import com.example.yetanothertodolist.Backend.Converter
-import com.example.yetanothertodolist.Backend.ServerList
-import com.example.yetanothertodolist.Backend.ServerOneElement
 import com.example.yetanothertodolist.MainActivity
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.TodoItemRepository
 import com.example.yetanothertodolist.YetAnotherApplication
 import com.example.yetanothertodolist.databinding.ListFragmentBinding
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import okhttp3.OkHttp
-import okhttp3.OkHttpClient
-import java.lang.RuntimeException
-import java.time.LocalDate
-import kotlin.random.Random
 
 class ListFragment : Fragment(R.layout.list_fragment) {
     private lateinit var binding: ListFragmentBinding
@@ -40,10 +24,10 @@ class ListFragment : Fragment(R.layout.list_fragment) {
 
     companion object {
         val TASK_TAG = "Task"
-        private lateinit var repository: TodoItemRepository
+        private lateinit var repository: TodoItemRepository // странное место для хранения репозитория, зачем и тут и в application?
 
         fun addList(item: TodoItem) = MainActivity.scope.launch {
-                repository.addServerElement(item)
+                repository.addServerElement(item) // я понимаю, что не используется, но тут был бы поход в сеть на основном потоке
         }
     }
 
@@ -74,13 +58,13 @@ class ListFragment : Fragment(R.layout.list_fragment) {
         }
     }
 
-    private fun updateNumber() {
+    private fun updateNumber() { // хорошо бы сделать лайвдатой
         binding.completed.text =
             String.format(resources.getString(R.string.completed), repository.numberOfCompleted)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        repository = (activity?.application as YetAnotherApplication).repository
+        repository = (activity?.application as YetAnotherApplication).repository // вроде не гарантируется, что в этом месте у фрагмента есть activity, потенциальный креш
         adapter = TodoAdapter(repository, requireActivity().applicationContext)
         super.onCreate(savedInstanceState)
     }

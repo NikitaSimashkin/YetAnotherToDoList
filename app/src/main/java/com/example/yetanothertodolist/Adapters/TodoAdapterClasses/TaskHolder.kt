@@ -1,16 +1,12 @@
 package com.example.yetanothertodolist.Adapters.TodoAdapterClasses
 
-import android.content.ContentValues.TAG
 import android.content.res.ColorStateList
 import android.graphics.Paint
-import android.util.Log
 import android.view.View
-import android.view.WindowManager
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yetanothertodolist.Adapters.TodoAdapter
-import com.example.yetanothertodolist.Fragments.Action
 import com.example.yetanothertodolist.Fragments.AddFragment
 import com.example.yetanothertodolist.Fragments.ListFragment
 import com.example.yetanothertodolist.MainActivity
@@ -22,7 +18,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
-import java.time.LocalDateTime
 
 class TaskHolder(itemView: View, val adapter: TodoAdapter) : RecyclerView.ViewHolder(itemView) {
     private var binding: TodoItemBinding = TodoItemBinding.bind(itemView)
@@ -69,7 +64,7 @@ class TaskHolder(itemView: View, val adapter: TodoAdapter) : RecyclerView.ViewHo
 
         binding.dateText.text =
             if (data.deadline != null) data.deadline.toLocalDate().toString() else ""
-//        if (data.deadline != null) {
+//        if (data.deadline != null) { Убирай пожалуйста лишний код, не коммить его. Можно держать такое в отдельном changelist в студии.
 //            val lp = binding.datelayout.layoutParams
 //            lp.height = WindowManager.LayoutParams.WRAP_CONTENT
 //            binding.dateText.text = data.deadline.toLocalDate().toString()
@@ -80,10 +75,12 @@ class TaskHolder(itemView: View, val adapter: TodoAdapter) : RecyclerView.ViewHo
 //        }
     }
 
-    /*
-    onlyOneCoroutineScope, как следует из названия, может запускать только одну корутину для каждого задания
-    Это сделано для того, чтобы стабилизировать поведение программы, когда пользователь включает
-    режим тестировщика и меняет миллион раз чекбокс, оттого у нас получаются бесполезные корутины
+    /**
+     * Докстринги можно писать с помощью звёздочек, она красиво подсветится зелёным.
+     *
+     * onlyOneCoroutineScope, как следует из названия, может запускать только одну корутину для каждого задания
+     * Это сделано для того, чтобы стабилизировать поведение программы, когда пользователь включает
+     * режим тестировщика и меняет миллион раз чекбокс, оттого у нас получаются бесполезные корутины
      */
     private fun updateRepository(item: TodoItem) {
         MainActivity.scope.launch(Dispatchers.IO) {
@@ -92,8 +89,8 @@ class TaskHolder(itemView: View, val adapter: TodoAdapter) : RecyclerView.ViewHo
                     adapter.map[item.id]!!.cancel()
                 }
                 adapter.map[item.id] =
-                    launch(Dispatchers.IO) {
-                        try {
+                    launch(Dispatchers.IO) { // тут и так Dispatchers.IO
+                        try { // мне кажется, что удобнее использовать CoroutineExceptionHandler, чем try..catch
                             adapter.repository.updateItem(item.copy(done = binding.checkBoxTask.isChecked))
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) {
@@ -109,11 +106,14 @@ class TaskHolder(itemView: View, val adapter: TodoAdapter) : RecyclerView.ViewHo
                                     }
                                     is UnknownHostException -> {
                                         adapter.snackbar.setText(AddFragment.noInternet)
-                                    }
+                                    } // а если что-то другое? Таймаут, ssl handshake, другие IOException
                                 }
 
                                 adapter.snackbar.setAction(AddFragment.retry) {
                                     MainActivity.scope.launch(Dispatchers.IO) {
+                                        // надеюсь, что такая вложенность уйдёт к следующей домашке
+                                        // И постарайся не вылазить за 120 символов в строке
+                                        adapter.repository.updateServerElement(item.copy(done = binding.checkBoxTask.isChecked))
                                         try {
                                             adapter.repository.updateServerElement(item.copy(done = binding.checkBoxTask.isChecked))
                                         } catch (e: Exception) {

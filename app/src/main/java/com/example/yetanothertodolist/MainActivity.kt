@@ -1,15 +1,9 @@
 package com.example.yetanothertodolist
 
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
-import androidx.work.Data
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.yetanothertodolist.Backend.ConnectiveLiveData
@@ -28,8 +22,6 @@ class MainActivity : AppCompatActivity() {
             private set
     }
 
-    private var first = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -38,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         val updateListRequest = PeriodicWorkRequestBuilder<UpdateListWorker>(8, TimeUnit.HOURS).build()
         WorkManager.getInstance(applicationContext).enqueue(updateListRequest)
+        // плодишь кучу воркеров, используй enqueueUniqueWork
 
         snackBarStringsInit()
 
@@ -46,6 +39,9 @@ class MainActivity : AppCompatActivity() {
         ConnectiveLiveData(applicationContext).observe(this){
             if (it) {
                 // условие нужно для того, чтобы при запуске приложения без интернета patch не стер все
+                // разве revision от этого не спасает?
+                // должен спасать, в пустом списке нет ничего уникального, он может получиться не только на первом старте.
+                // тут потенциальный баг
                 if ((application as YetAnotherApplication).repository.tasks.value?.isEmpty() == true)
                     getList()
                 else {
@@ -58,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        scope = lifecycleScope
+        scope = lifecycleScope // нигде не зануляется, утечка памяти
     }
 
     override fun onDestroy() {
@@ -77,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun snackBarStringsInit(){
+    private fun snackBarStringsInit(){ // зачем это всё, если снекбары умеют принимать res_id вместо строк?
         AddFragment.retry = resources.getText(R.string.retry).toString()
         AddFragment.revisionError = resources.getText(R.string.revisionError).toString()
         AddFragment.elementNotFount = resources.getText(R.string.elementNotFoundError).toString()

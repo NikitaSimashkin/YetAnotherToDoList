@@ -14,7 +14,7 @@ class ConnectiveLiveData(context: Context): LiveData<Boolean>() {
     private val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
 
 
-    override fun onActive() {
+    override fun onActive() { // молодец, хорошее решение завести такую лайвдату
         callback = object: ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 val networkCapabilities = cm.getNetworkCapabilities(network)

@@ -2,7 +2,7 @@ package com.example.yetanothertodolist.Adapters.TodoAdapterClasses
 
 import androidx.recyclerview.widget.DiffUtil
 
-class TodoAdapterDiffUtil(val oldList: List<TodoItem>, val newList: List<TodoItem>) : DiffUtil.Callback() {
+class TodoAdapterDiffUtil(val oldList: List<TodoItem>, val newList: List<TodoItem>) : DiffUtil.Callback() { // переменные должны быть приватными, если они никому не нужны снаружи
     override fun getOldListSize(): Int = oldList.size
 
     override fun getNewListSize(): Int = newList.size
