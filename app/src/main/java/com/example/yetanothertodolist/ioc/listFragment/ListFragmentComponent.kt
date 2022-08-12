@@ -23,13 +23,12 @@ class ListFragmentComponent(
         setInternetChangeListener(context)
     }
 
-    private var first = true
     private fun setInternetChangeListener(context: Context) {
         ConnectiveLiveData(context).observe(fragment.requireActivity()) {
             if (it) {
-                if (first){
+                if (viewModel.firstLaunch){
                     viewModel.callToRepository(Action.GetList)
-                    first = false
+                    viewModel.firstLaunch = false
                 } else
                     viewModel.callToRepository(Action.UpdateList)
             } else {
