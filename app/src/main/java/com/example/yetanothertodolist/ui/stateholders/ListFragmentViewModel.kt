@@ -38,11 +38,11 @@ class ListFragmentViewModel(private val repository: TodoItemRepository) : ViewMo
     /**
      * Смотри ErrorManager enableNotice
      */
-    var noticeFlag: Boolean? = true
+    var noticeFlag: Boolean = true
     fun changeNoticeFlag(){
         if (repository.errorManager != null){
             repository.errorManager!!.enableNotice = !repository.errorManager!!.enableNotice
-            noticeFlag = noticeFlag?.not()
+            noticeFlag = noticeFlag.not()
         }
     }
 

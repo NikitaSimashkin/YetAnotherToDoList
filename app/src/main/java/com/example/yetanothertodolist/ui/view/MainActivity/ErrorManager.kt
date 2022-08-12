@@ -8,6 +8,7 @@ import com.example.yetanothertodolist.data.FourZeroFourException
 import com.example.yetanothertodolist.data.FourZeroOneException
 import com.example.yetanothertodolist.data.FourZeroZeroException
 import com.example.yetanothertodolist.data.repository.TodoItemRepository
+import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import java.net.UnknownHostException
@@ -18,8 +19,13 @@ import kotlin.Exception
  */
 class ErrorManager(
     private val repository: TodoItemRepository,
-    private val mainActivity: MainActivity
+    private val mainActivity: MainActivity,
+    private val viewModel: ListFragmentViewModel
 ) {
+
+    init{
+        repository.errorManager = this
+    }
 
     private val mainActivityContainer = mainActivity.findViewById<View>(R.id.main_root)
 
@@ -27,7 +33,7 @@ class ErrorManager(
      * Когда нет интернета, то при любом действии вылазит снекбар, это может раздражать.
      * Этот флаг как раз фиксит это
      */
-    var enableNotice: Boolean = true
+    var enableNotice: Boolean = viewModel.noticeFlag
 
     /**
      * Запускаем на скоупе активити, так как нам надо показать снекбар и повторить действие

@@ -2,8 +2,10 @@ package com.example.yetanothertodolist.ui.view.MainActivity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.YetAnotherApplication
+import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
 
 /**
  * Главное и единственное activity, на котором отобраюажтся фрагменты
@@ -11,6 +13,9 @@ import com.example.yetanothertodolist.YetAnotherApplication
 class MainActivity : AppCompatActivity() {
 
     private var mainActivityViewComponent: MainActivityViewComponent? = null
+    private val viewModel: ListFragmentViewModel by viewModels {
+        (application as YetAnotherApplication).applicationComponent.viewModelFactory
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +24,8 @@ class MainActivity : AppCompatActivity() {
 
         mainActivityViewComponent = MainActivityViewComponent(
             this,
-            (application as YetAnotherApplication).applicationComponent
+            (application as YetAnotherApplication).applicationComponent,
+            viewModel
         )
     }
 
