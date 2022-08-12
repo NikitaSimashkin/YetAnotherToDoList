@@ -59,13 +59,16 @@ class AddFragmentViewModel(private val repository: TodoItemRepository) : ViewMod
         lastUpdateBy = item.lastUpdateBy
     }
 
-    fun getItem(): TodoItem {
+    fun getItem(
+        isNewTask: Boolean = false
+    ): TodoItem {
+        val changedAt = LocalDateTime.now()
         return TodoItem(
             id = id,
             description = description,
             importance = importance,
             done = done,
-            createdAt = createdAt,
+            createdAt = if (isNewTask) changedAt else createdAt,
             deadline = deadline,
             changedAt = changedAt,
             color = color,
@@ -83,10 +86,18 @@ class AddFragmentViewModel(private val repository: TodoItemRepository) : ViewMod
         id: String? = null
     ) {
         when (action) {
-            Action.Add -> { viewModelScope.launch(Dispatchers.IO) { repository.addItem(item!!) } }
-            Action.Delete -> { viewModelScope.launch(Dispatchers.IO) { repository.removeItem(item!!) } }
-            Action.Update -> { viewModelScope.launch(Dispatchers.IO) { repository.updateItem(item!!) } }
-            Action.GetElement -> { viewModelScope.launch(Dispatchers.IO) { repository.getItem(id!!) } }
+            Action.Add -> {
+                viewModelScope.launch(Dispatchers.IO) { repository.addItem(item!!) }
+            }
+            Action.Delete -> {
+                viewModelScope.launch(Dispatchers.IO) { repository.removeItem(item!!) }
+            }
+            Action.Update -> {
+                viewModelScope.launch(Dispatchers.IO) { repository.updateItem(item!!) }
+            }
+            Action.GetElement -> {
+                viewModelScope.launch(Dispatchers.IO) { repository.getItem(id!!) }
+            }
             else -> throw IllegalArgumentException()
         }
     }

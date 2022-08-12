@@ -175,7 +175,7 @@ class AddFragmentViewController(
     }
 
     private fun addTask() {
-        val newTask = addModel.getItem()
+        val newTask = addModel.getItem(true)
 
         addModel.callToRepository(Action.Add, newTask)
         closeFragment()

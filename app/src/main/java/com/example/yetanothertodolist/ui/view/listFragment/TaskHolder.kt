@@ -12,6 +12,7 @@ import com.example.yetanothertodolist.databinding.TodoItemBinding
 import com.example.yetanothertodolist.ui.stateholders.Action
 import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
 import com.example.yetanothertodolist.ui.view.addFragment.Importance
+import java.time.LocalDateTime
 
 /**
  * ViewHolder для TodoAdapter, отображает одно задание
@@ -64,7 +65,7 @@ class TaskHolder(itemView: View, private val viewModel: ListFragmentViewModel) :
         checkBoxTask.setOnClickListener {
             viewModel.callToRepository(
                 Action.Update,
-                data.copy(done = binding.checkBoxTask.isChecked)
+                data.copy(done = binding.checkBoxTask.isChecked, changedAt = LocalDateTime.now())
             )
             changeTextStyle()
         }
