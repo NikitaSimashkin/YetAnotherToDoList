@@ -13,9 +13,7 @@ class UpdateListWorker(val context: Context, workerParams: WorkerParameters) : C
     workerParams
 ) {
     override suspend fun doWork(): Result {
-        val app = (context.applicationContext as YetAnotherApplication)
-       // val repository = app.applicationComponent.repository
-       // repository.getList()
+        (context.applicationContext as YetAnotherApplication).applicationComponent.repository.serverGetListWithoutErrorManager()
         return Result.success()
     }
 }

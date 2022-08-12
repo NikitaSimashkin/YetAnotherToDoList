@@ -90,4 +90,15 @@ class TodoItemRepository(
     suspend fun serverAdd(item: TodoItem) = dataSource.addItem(item)
 
     suspend fun serverRemove(item: TodoItem) = dataSource.deleteItem(item.id)
+
+
+    /**
+     * Да, иногда надо обязательно сходить в сеть, даже если errorManager нету
+     * Этот метод создан только для workManager, я бы его пометил какой-нибудь аннотацией, но
+     * не знаю какой
+     */
+    suspend fun serverGetListWithoutErrorManager(){
+        val list = dataSource.getList()
+        withContext(Dispatchers.Main){_tasks.value = list}
+    }
 }

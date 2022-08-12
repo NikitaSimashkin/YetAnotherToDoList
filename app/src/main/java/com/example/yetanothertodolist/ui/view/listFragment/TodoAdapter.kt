@@ -54,6 +54,4 @@ class TodoAdapter(
 
         lateinit var colorsForLowAndBasic: IntArray
     }
-
-    val map = HashMap<String, Job>() // для метода changeIsCompleted
 }

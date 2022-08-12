@@ -50,28 +50,21 @@ class ErrorManager(
         Snackbar.make(mainActivityContainer!!, textResId, Snackbar.LENGTH_SHORT).show()
     }
 
-    suspend fun launchWithHandler(action: (suspend () -> Unit)? = null) {
+    suspend fun launchWithHandler(action: (suspend () -> Unit)? = null) =
         withContext(Dispatchers.IO) {
             try {
                 action!!()
             } catch (e: Exception) {
                 if (enableNotice) {
                     when (e) {
-                        is FourZeroOneException, is FiveZeroZeroException -> {
-                            authError(action!!)
-                        }
-                        is FourZeroFourException, is FourZeroZeroException -> {
-                            notFountError(action!!)
-                        }
-                        is UnknownHostException -> {
-                            internetConnectionError(action!!)
-                        }
+                        is FourZeroOneException, is FiveZeroZeroException -> authError(action!!)
+                        is FourZeroFourException, is FourZeroZeroException -> notFountError(action!!)
+                        is UnknownHostException -> internetConnectionError(action!!)
                         else -> unknownError()
                     }
                 }
             }
         }
-    }
 
     private fun unknownError() {
         getSnackBarWithoutAction(R.string.unknownError)

@@ -10,15 +10,12 @@ import com.example.yetanothertodolist.databinding.AddFragmentBinding
 import com.example.yetanothertodolist.ui.model.TodoItem
 import com.example.yetanothertodolist.ui.stateholders.Action
 import com.example.yetanothertodolist.ui.stateholders.AddFragmentViewModel
-import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
 import com.google.android.material.snackbar.Snackbar
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-/**
- * Контроллер вьюшек для фрагмента добавления
- */
+/** Контроллер вьюшек для addFragment */
 class AddFragmentViewController(
     private val binding: AddFragmentBinding,
     private val addModel: AddFragmentViewModel,
@@ -28,7 +25,7 @@ class AddFragmentViewController(
     private val context = binding.close.context
 
     fun setUpViews(task: Any?) {
-        if (!addModel.valuesAlreadySet){
+        if (!addModel.valuesAlreadySet) {
             if (task == null)
                 addModel.setStartValues()
             else
@@ -49,16 +46,22 @@ class AddFragmentViewController(
             addModel.description = text.toString()
         }
 
-        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 addModel.importance = Importance.getImportance(position)
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
         binding.dateAddFragment.doOnTextChanged { text, start, before, count ->
             if (text != null && text != "")
-                addModel.deadline = LocalDateTime.of(LocalDate.parse(text), LocalTime.of(0,0,0))
+                addModel.deadline = LocalDateTime.of(LocalDate.parse(text), LocalTime.of(0, 0, 0))
             else
                 addModel.deadline = null
         }
@@ -68,11 +71,11 @@ class AddFragmentViewController(
         description.setText(addModel.description)
 
         spinner.setSelection(addModel.importance.ordinal)
-        if (addModel.deadline != null){
-            dateAddFragment.text= addModel.deadline!!.toLocalDate().toString()
+        if (addModel.deadline != null) {
+            dateAddFragment.text = addModel.deadline!!.toLocalDate().toString()
             calendarSwitch.isChecked = true
         } else {
-            dateAddFragment.text= ""
+            dateAddFragment.text = ""
             calendarSwitch.isChecked = false
         }
     }
@@ -100,18 +103,21 @@ class AddFragmentViewController(
 
     private fun createDatePicker() {
         datePicker = DatePickerDialog(context, R.style.Calendar)
-
-        datePicker!!.setButton(DatePickerDialog.BUTTON_POSITIVE, context.getText(R.string.ready), datePicker)
-
-        datePicker!!.setButton(DatePickerDialog.BUTTON_NEGATIVE, context.getText(R.string.cancel), datePicker)
-
+        datePicker!!.setButton(
+            DatePickerDialog.BUTTON_POSITIVE,
+            context.getText(R.string.ready),
+            datePicker
+        )
+        datePicker!!.setButton(
+            DatePickerDialog.BUTTON_NEGATIVE,
+            context.getText(R.string.cancel),
+            datePicker
+        )
         datePicker!!.setOnDateSetListener { _, year, month, dayOfMonth ->
             binding.dateAddFragment.text = LocalDate.of(year, month, dayOfMonth).toString()
         }
-
         datePicker!!.setOnCancelListener {
-            if (binding.dateAddFragment.text.isEmpty())
-                binding.calendarSwitch.isChecked = false
+            if (binding.dateAddFragment.text.isEmpty()) binding.calendarSwitch.isChecked = false
         }
     }
 
