@@ -35,4 +35,13 @@ class ListFragmentViewModel(private val repository: TodoItemRepository) : ViewMo
             else -> throw IllegalArgumentException()
         }
     }
+
+    var noticeFlag: Boolean? = true
+
+    fun changeNoticeFlag(){
+        if (repository.errorManager != null){
+            repository.errorManager!!.enableNotice = !repository.errorManager!!.enableNotice
+            noticeFlag = noticeFlag?.not()
+        }
+    }
 }

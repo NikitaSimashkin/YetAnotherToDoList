@@ -17,6 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_graph"
-        tools:context=".ui.view.MainActivity" />
+        tools:context=".ui.view.MainActivity.MainActivity" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

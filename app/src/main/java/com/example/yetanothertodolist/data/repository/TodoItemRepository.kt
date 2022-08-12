@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.yetanothertodolist.data.sources.DataSource
 import com.example.yetanothertodolist.ui.model.TodoItem
-import com.example.yetanothertodolist.other.ErrorManager
+import com.example.yetanothertodolist.ui.view.MainActivity.ErrorManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -14,8 +14,16 @@ import kotlinx.coroutines.sync.withLock
  */
 class TodoItemRepository(
     private val dataSource: DataSource,
-    private val errorManager: ErrorManager
 ) {
+
+    /**
+     * Без менеджера ошибок репозиторий будет выполнять свои задачи, но только локально.
+     * Если нужно отправлять данные на сервер - требуется задать errorManager.
+     * Поэтому тут нельзя сказать "ты не прав, все обязательные для работы объекты
+     * должны быть в конструкторе" так как ErrorManager не обязательный - без него репозиторий
+     * не сломается
+     */
+    var errorManager: ErrorManager? = null
 
     private val _tasks = MutableLiveData<List<TodoItem>>(ArrayList())
     val tasks: LiveData<List<TodoItem>> = _tasks
@@ -25,8 +33,8 @@ class TodoItemRepository(
     suspend fun addItem(item: TodoItem) = mutex.withLock {
         withContext(Dispatchers.IO) {
             val newList = ArrayList(_tasks.value as List<TodoItem>).also { it.add(item) }
-            _tasks.postValue(newList)
-            errorManager.launchWithHandler {serverAdd(item)}
+            withContext(Dispatchers.Main){_tasks.value = newList}
+            errorManager?.launchWithHandler {serverAdd(item)}
         }
     }
 
@@ -34,8 +42,8 @@ class TodoItemRepository(
         withContext(Dispatchers.IO) {
             val newList = ArrayList(_tasks.value as List<TodoItem>)
             newList.removeIf { it.id == item.id }
-            _tasks.postValue(newList)
-            errorManager.launchWithHandler {serverRemove(item) }
+            withContext(Dispatchers.Main){_tasks.value = newList}
+            errorManager?.launchWithHandler {serverRemove(item) }
         }
     }
 
@@ -43,8 +51,8 @@ class TodoItemRepository(
         withContext(Dispatchers.IO) {
             val newList = ArrayList(_tasks.value as List<TodoItem>)
             newList[newList.indexOfFirst { it.id == item.id }] = item
-            _tasks.postValue(newList)
-            errorManager.launchWithHandler { serverUpdate(item) }
+            withContext(Dispatchers.Main){_tasks.value = newList}
+            errorManager?.launchWithHandler { serverUpdate(item) }
         }
     }
 
@@ -59,7 +67,7 @@ class TodoItemRepository(
 
     suspend fun getItem(id: String): TodoItem {
         var item: TodoItem? = null
-        errorManager.launchWithHandler {
+        errorManager?.launchWithHandler {
             item = serverGetItem(id)
         }
         return item!!
@@ -67,14 +75,14 @@ class TodoItemRepository(
 
     suspend fun serverGetItem(id: String) = dataSource.getItem(id)
 
-    suspend fun serverGetList() = errorManager.launchWithHandler {
+    suspend fun serverGetList() = errorManager?.launchWithHandler {
         val list = dataSource.getList()
-        _tasks.postValue(list)
+        withContext(Dispatchers.Main){_tasks.value = list}
     }
 
-    suspend fun serverUpdateList() = errorManager.launchWithHandler {
+    suspend fun serverUpdateList() = errorManager?.launchWithHandler {
         val list = dataSource.updateList(_tasks.value!!)
-        _tasks.postValue(list)
+        withContext(Dispatchers.Main){_tasks.value = list}
     }
 
     suspend fun serverUpdate(item: TodoItem) = dataSource.updateItem(item)

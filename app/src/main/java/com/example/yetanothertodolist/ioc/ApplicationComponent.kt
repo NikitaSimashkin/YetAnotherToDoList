@@ -7,7 +7,6 @@ import com.example.yetanothertodolist.other.UpdateListWorker
 import com.example.yetanothertodolist.data.sources.DataSource
 import com.example.yetanothertodolist.data.repository.TodoItemRepository
 import com.example.yetanothertodolist.data.sources.YetAnotherAPI
-import com.example.yetanothertodolist.other.ErrorManager
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -25,9 +24,7 @@ class ApplicationComponent(applicationContext: Context) {
 
     private val dataSource = DataSource(yetAnotherAPI)
 
-    val errorManager = ErrorManager()
-
-    private val repository: TodoItemRepository = TodoItemRepository(dataSource, errorManager)
+    val repository = TodoItemRepository(dataSource)
 
     val viewModelFactory = ViewModelFactory(repository)
 

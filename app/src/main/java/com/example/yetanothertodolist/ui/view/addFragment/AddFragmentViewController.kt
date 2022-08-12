@@ -27,7 +27,7 @@ class AddFragmentViewController(
     private var datePicker: DatePickerDialog? = null
     private val context = binding.close.context
 
-    fun setUpView(task: Any?) {
+    fun setUpViews(task: Any?) {
         if (!addModel.valuesAlreadySet){
             if (task == null)
                 addModel.setStartValues()

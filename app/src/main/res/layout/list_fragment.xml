@@ -61,16 +61,25 @@
             android:id="@+id/completed_eye"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="60dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="6dp"
             android:layout_marginRight="24dp"
             android:orientation="horizontal"
             app:layout_scrollFlags="exitUntilCollapsed">
 
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/notification"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="10dp"
+                android:background="@null"
+                app:srcCompat="@drawable/selector_for_notification_button" />
+
             <TextView
                 android:id="@+id/completed"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="18dp"
                 android:layout_weight="1"
                 android:text="@string/completed"
                 android:textSize="16sp" />
