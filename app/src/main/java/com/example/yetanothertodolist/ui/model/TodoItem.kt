@@ -1,9 +1,8 @@
-package com.example.yetanothertodolist.Adapters.TodoAdapterClasses
+package com.example.yetanothertodolist.ui.model
 
+import com.example.yetanothertodolist.ui.view.addFragment.Importance
 import java.io.Serializable
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.temporal.Temporal
 
 data class TodoItem(
 

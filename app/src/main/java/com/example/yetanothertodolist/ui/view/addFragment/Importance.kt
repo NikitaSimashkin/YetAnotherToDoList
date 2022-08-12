@@ -1,7 +1,10 @@
-package com.example.yetanothertodolist.Adapters.TodoAdapterClasses
+package com.example.yetanothertodolist.ui.view.addFragment
 
 import java.lang.IllegalArgumentException
 
+/**
+ * Вариации важности задания
+ */
 enum class Importance {
     Low, Basic, Important;
 

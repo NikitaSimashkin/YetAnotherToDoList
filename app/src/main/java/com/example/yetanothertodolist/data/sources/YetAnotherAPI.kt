@@ -1,8 +1,13 @@
-package com.example.yetanothertodolist.Backend
+package com.example.yetanothertodolist.data.sources
 
+import com.example.yetanothertodolist.data.model.ServerList
+import com.example.yetanothertodolist.data.model.ServerOneElement
 import retrofit2.Response
 import retrofit2.http.*
 
+/**
+ * Класс для работы с сетью
+ */
 interface YetAnotherAPI {
 
     @GET("list")
@@ -10,7 +15,7 @@ interface YetAnotherAPI {
 
 
     @PATCH("list")
-    suspend fun updateServerList(
+    suspend fun updateList(
         @Header("X-Last-Known-Revision") number: Long,
         @Body list: ServerList
     ): Response<ServerList>

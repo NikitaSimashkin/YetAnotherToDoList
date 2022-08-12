@@ -135,6 +135,7 @@
                         android:id="@+id/date_add_fragment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:clickable="false"
                         android:textColor="@color/color_blue"
                         android:textSize="14sp" />
 

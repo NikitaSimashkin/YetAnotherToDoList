@@ -1,18 +1,6 @@
-package com.example.yetanothertodolist.Backend
+package com.example.yetanothertodolist.data.model
 
 import com.google.gson.annotations.SerializedName
-
-data class ServerList(
-    val status: String,
-    val list: List<ServerTodoItem>,
-    val revision: Long? = null
-)
-
-data class ServerOneElement(
-    val status: String,
-    val element: ServerTodoItem,
-    val revision: Long? = null
-)
 
 data class ServerTodoItem(
     val id: String,
