@@ -9,6 +9,7 @@ import com.example.yetanothertodolist.data.FourZeroFourException
 import com.example.yetanothertodolist.data.FourZeroOneException
 import com.example.yetanothertodolist.data.FourZeroZeroException
 import com.example.yetanothertodolist.ui.model.TodoItem
+import java.net.UnknownHostException
 
 
 /**
@@ -88,6 +89,6 @@ class DataSource(private val api: YetAnotherAPI) {
             404 -> throw FourZeroFourException()
             500 -> throw FiveZeroZeroException()
         }
-        // throw FiveZeroZeroException()
+        //throw FiveZeroZeroException()
     }
 }

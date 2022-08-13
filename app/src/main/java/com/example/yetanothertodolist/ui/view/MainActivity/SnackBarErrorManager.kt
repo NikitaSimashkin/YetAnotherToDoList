@@ -2,6 +2,7 @@ package com.example.yetanothertodolist.ui.view.MainActivity
 
 import android.content.Context
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.data.FiveZeroZeroException
@@ -27,12 +28,12 @@ class SnackBarErrorManager(
     private val viewModel: MainActivityViewModel
 ) : ErrorManager {
 
+    private var mainActivityContainer: View = mainActivity.findViewById(R.id.main_root)
+
     init {
         viewModel.setErrorManager(this)
         setInternetChangeListener(mainActivity.applicationContext)
     }
-
-    private val mainActivityContainer = mainActivity.findViewById<View>(R.id.main_root)
 
     /**
      * Запускаем на скоупе активити, так как нам надо показать снекбар и повторить действие
@@ -89,7 +90,8 @@ class SnackBarErrorManager(
     }
 
     private fun setInternetChangeListener(context: Context) {
-        ConnectiveLiveData(context).observe(mainActivity) {
+        val connectiveLiveData = ConnectiveLiveData(context)
+        connectiveLiveData.observe(mainActivity) {
             if (it) {
                 if (viewModel.firstLaunch) {
                     viewModel.callToRepository(Action.GetList)
@@ -103,4 +105,6 @@ class SnackBarErrorManager(
             }
         }
     }
+
+
 }

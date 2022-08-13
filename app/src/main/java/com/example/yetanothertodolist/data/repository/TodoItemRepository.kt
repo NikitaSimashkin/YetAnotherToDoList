@@ -73,23 +73,23 @@ class TodoItemRepository(
         return item!!
     }
 
-    suspend fun serverGetItem(id: String) = dataSource.getItem(id)
+    private suspend fun serverGetItem(id: String) = dataSource.getItem(id)
 
-    suspend fun serverGetList() = errorManager?.launchWithHandler {
+    private suspend fun serverGetList() = errorManager?.launchWithHandler {
         val list = dataSource.getList()
         withContext(Dispatchers.Main){_tasks.value = list}
     }
 
-    suspend fun serverUpdateList() = errorManager?.launchWithHandler {
+    private suspend fun serverUpdateList() = errorManager?.launchWithHandler {
         val list = dataSource.updateList(_tasks.value!!)
         withContext(Dispatchers.Main){_tasks.value = list}
     }
 
-    suspend fun serverUpdate(item: TodoItem) = dataSource.updateItem(item)
+    private suspend fun serverUpdate(item: TodoItem) = dataSource.updateItem(item)
 
-    suspend fun serverAdd(item: TodoItem) = dataSource.addItem(item)
+    private suspend fun serverAdd(item: TodoItem) = dataSource.addItem(item)
 
-    suspend fun serverRemove(item: TodoItem) = dataSource.deleteItem(item.id)
+    private suspend fun serverRemove(item: TodoItem) = dataSource.deleteItem(item.id)
 
 
     /**
