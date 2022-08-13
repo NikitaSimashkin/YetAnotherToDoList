@@ -2,14 +2,12 @@ package com.example.yetanothertodolist.ui.view.MainActivity
 
 import android.content.Context
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.data.FiveZeroZeroException
 import com.example.yetanothertodolist.data.FourZeroFourException
 import com.example.yetanothertodolist.data.FourZeroOneException
 import com.example.yetanothertodolist.data.FourZeroZeroException
-import com.example.yetanothertodolist.data.repository.TodoItemRepository
 import com.example.yetanothertodolist.other.ConnectiveLiveData
 import com.example.yetanothertodolist.other.ErrorManager
 import com.example.yetanothertodolist.ui.stateholders.Action
@@ -28,7 +26,7 @@ class SnackBarErrorManager(
     private val viewModel: MainActivityViewModel
 ) : ErrorManager {
 
-    private var mainActivityContainer: View = mainActivity.findViewById(R.id.main_root)
+    private val mainActivityContainer: View = mainActivity.findViewById(R.id.main_root)
 
     init {
         viewModel.setErrorManager(this)
@@ -43,7 +41,7 @@ class SnackBarErrorManager(
         nameActionResId: Int,
         action: suspend () -> Unit
     ) {
-        Snackbar.make(mainActivityContainer!!, textResId, Snackbar.LENGTH_SHORT)
+        Snackbar.make(mainActivityContainer, textResId, Snackbar.LENGTH_SHORT)
             .setAction(nameActionResId) {
                 mainActivity.lifecycleScope.launch {
                     launchWithHandler(action)
@@ -53,7 +51,7 @@ class SnackBarErrorManager(
     }
 
     private fun getSnackBarWithoutAction(textResId: Int) {
-        Snackbar.make(mainActivityContainer!!, textResId, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(mainActivityContainer, textResId, Snackbar.LENGTH_SHORT).show()
     }
 
     override suspend fun launchWithHandler(action: (suspend () -> Unit)?) =
@@ -93,17 +91,47 @@ class SnackBarErrorManager(
         val connectiveLiveData = ConnectiveLiveData(context)
         connectiveLiveData.observe(mainActivity) {
             if (it) {
-                if (viewModel.firstLaunch) {
-                    viewModel.callToRepository(Action.GetList)
-                    viewModel.firstLaunch = false
-                } else {
-                    viewModel.callToRepository(Action.UpdateList)
-                    getSnackBarWithoutAction(R.string.yesInternet)
-                }
+                internetTrue()
             } else {
-                getSnackBarWithoutAction(R.string.noInternet)
+                internetFalse()
             }
         }
+        startNoInternetSnackBar()
+    }
+
+    private fun internetFalse() {
+        if (viewModel.isConnected)
+            getSnackBarWithoutAction(R.string.noInternet)
+        viewModel.isConnected = false
+    }
+
+    private fun internetTrue() {
+        if (!viewModel.firstLaunch && !viewModel.isConnected)
+            getSnackBarWithoutAction(R.string.yesInternet)
+        else
+            viewModel.firstLaunch = false
+
+        if (viewModel.listIsNotReceived) {
+            viewModel.listIsNotReceived = false
+            viewModel.callToRepository(Action.GetList)
+        } else {
+            viewModel.callToRepository(Action.UpdateList)
+        }
+        viewModel.isConnected = true
+    }
+
+    /**
+     * Этот метод только для ситуации, когда пользователь запустил приложение без интернета
+     * Без этого метода пользователь не узнает, что у него данные не сохраняются на сервер
+     */
+    private fun startNoInternetSnackBar() {
+        if (viewModel.firstLaunch)
+            mainActivity.lifecycleScope.launch(Dispatchers.IO) {
+                delay(3000)
+                if (viewModel.firstLaunch)
+                    getSnackBarWithoutAction(R.string.noInternet)
+                viewModel.firstLaunch = false
+            }
     }
 
 

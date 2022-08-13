@@ -28,9 +28,15 @@ class ListFragmentViewModel(private val repository: TodoItemRepository) : ViewMo
         item: TodoItem? = null
     ) {
         when (action) {
-            Action.Update -> { viewModelScope.launch(Dispatchers.IO) { repository.updateItem(item!!) } }
-            Action.GetList -> { viewModelScope.launch(Dispatchers.IO) { repository.getList()}}
-            Action.UpdateList -> { viewModelScope.launch(Dispatchers.IO) { repository.updateList() } }
+            Action.Update -> {
+                viewModelScope.launch(Dispatchers.IO) { repository.updateItem(item!!) }
+            }
+            Action.GetList -> {
+                viewModelScope.launch(Dispatchers.IO) { repository.getList() }
+            }
+            Action.UpdateList -> {
+                viewModelScope.launch(Dispatchers.IO) { repository.updateList() }
+            }
             else -> throw IllegalArgumentException()
         }
     }

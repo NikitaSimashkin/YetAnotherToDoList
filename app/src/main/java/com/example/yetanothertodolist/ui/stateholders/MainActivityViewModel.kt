@@ -17,7 +17,7 @@ class MainActivityViewModel(private val repository: TodoItemRepository): ViewMod
      * добавлять задания, по сути все что он сделает - пропадет как только появится интернет, эта
      * проблема решается через локальную базу данных, которую мы пока не проходили
      */
-    var firstLaunch = true
+    var listIsNotReceived = true
 
 
     fun callToRepository(
@@ -33,4 +33,12 @@ class MainActivityViewModel(private val repository: TodoItemRepository): ViewMod
     fun setErrorManager(em: ErrorManager){
         repository.errorManager = em
     }
+
+    /**
+     *  [firstLaunch] [listIsNotReceived] [isConnected] нужны для корректного отображения снэкбаров
+     *  Благодаря этим полям есть возможность учесть все частные случаи
+     */
+    var isConnected = false
+
+    var firstLaunch = true
 }

@@ -8,8 +8,7 @@ import androidx.navigation.findNavController
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.databinding.AddFragmentBinding
 import com.example.yetanothertodolist.ui.model.TodoItem
-import com.example.yetanothertodolist.ui.stateholders.Action
-import com.example.yetanothertodolist.ui.stateholders.AddFragmentViewModel
+import com.example.yetanothertodolist.ui.stateholders.*
 import com.google.android.material.snackbar.Snackbar
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -32,20 +31,30 @@ class AddFragmentViewController(
                 addModel.setItemValues(task as TodoItem)
             addModel.valuesAlreadySet = true
         }
-        closeButtonSetUp()
         spinnerSetUp()
         calendarSetUp()
-        deleteButtonSetUp(task)
+        deleteAndCloseButtonSetUp(task)
         saveButtonSetUp(task)
         setModelField()
         setListenerForModel()
     }
 
     private fun setListenerForModel() {
-        binding.description.doOnTextChanged { text, start, before, count ->
-            addModel.description = text.toString()
-        }
+        setListenerForModelDescription()
+        setListenerForModelSpinner()
+        setListenerForModelDate()
+    }
 
+    private fun setListenerForModelDate() {
+        binding.dateAddFragment.doOnTextChanged { text, start, before, count ->
+            if (text != null && text.isNotEmpty())
+                addModel.deadline = LocalDateTime.of(LocalDate.parse(text), LocalTime.of(0, 0, 0))
+            else
+                addModel.deadline = null
+        }
+    }
+
+    private fun setListenerForModelSpinner() {
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -58,18 +67,16 @@ class AddFragmentViewController(
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
 
-        binding.dateAddFragment.doOnTextChanged { text, start, before, count ->
-            if (text != null && text != "")
-                addModel.deadline = LocalDateTime.of(LocalDate.parse(text), LocalTime.of(0, 0, 0))
-            else
-                addModel.deadline = null
+    private fun setListenerForModelDescription() {
+        binding.description.doOnTextChanged { text, start, before, count ->
+            addModel.description = text.toString()
         }
     }
 
     private fun setModelField() = with(binding) {
         description.setText(addModel.description)
-
         spinner.setSelection(addModel.importance.ordinal)
         if (addModel.deadline != null) {
             dateAddFragment.text = addModel.deadline!!.toLocalDate().toString()
@@ -138,9 +145,7 @@ class AddFragmentViewController(
                 Snackbar.make(binding.root, R.string.save_error, Snackbar.LENGTH_SHORT).show()
             } else {
                 when (task) {
-                    null -> {
-                        addTask()
-                    }
+                    null -> addTask()
                     else -> {
                         val newTask = addModel.getItem()
                         updateTask(newTask)
@@ -150,7 +155,7 @@ class AddFragmentViewController(
         }
     }
 
-    private fun deleteButtonSetUp(task: Any?) {
+    private fun deleteAndCloseButtonSetUp(task: Any?) {
         if (task != null) {
             binding.delete.setOnClickListener {
                 binding.delete.isClickable = false
@@ -161,6 +166,8 @@ class AddFragmentViewController(
             binding.deleteText.setTextColor(color)
             binding.deleteIcon.setColorFilter(color)
         }
+
+        binding.close.setOnClickListener { closeFragment() }
     }
 
     private fun spinnerSetUp() {
@@ -181,14 +188,8 @@ class AddFragmentViewController(
     }
 
     private fun addTask() {
-        val newTask = addModel.getItem(true)
-
-        addModel.callToRepository(Action.Add, newTask)
+        addModel.callToRepository(Action.Add, addModel.getItem(true))
         closeFragment()
-    }
-
-    private fun closeButtonSetUp() {
-        binding.close.setOnClickListener { closeFragment() }
     }
 
     private fun closeFragment() {

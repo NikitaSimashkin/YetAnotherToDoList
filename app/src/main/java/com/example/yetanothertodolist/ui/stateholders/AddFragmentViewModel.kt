@@ -77,28 +77,25 @@ class AddFragmentViewModel(private val repository: TodoItemRepository) : ViewMod
     }
 
     /**
-     * Оставил в этом методе только те действия, которые должнна уметь эта ViewModel. Если вдруг забуду
-     * добавить новый action, то выбросится ошибка - все под контролем
+     * Оставил в этом методе только те действия, которые должнна уметь эта ViewModel
      */
     fun callToRepository(
         action: Action,
         item: TodoItem? = null,
         id: String? = null
-    ) {
-        when (action) {
-            Action.Add -> {
-                viewModelScope.launch(Dispatchers.IO) { repository.addItem(item!!) }
-            }
-            Action.Delete -> {
-                viewModelScope.launch(Dispatchers.IO) { repository.removeItem(item!!) }
-            }
-            Action.Update -> {
-                viewModelScope.launch(Dispatchers.IO) { repository.updateItem(item!!) }
-            }
-            Action.GetElement -> {
-                viewModelScope.launch(Dispatchers.IO) { repository.getItem(id!!) }
-            }
-            else -> throw IllegalArgumentException()
+    ) = when (action) {
+        Action.Add -> {
+            viewModelScope.launch(Dispatchers.IO) { repository.addItem(item!!) }
         }
+        Action.Delete -> {
+            viewModelScope.launch(Dispatchers.IO) { repository.removeItem(item!!) }
+        }
+        Action.Update -> {
+            viewModelScope.launch(Dispatchers.IO) { repository.updateItem(item!!) }
+        }
+        Action.GetElement -> {
+            viewModelScope.launch(Dispatchers.IO) { repository.getItem(id!!) }
+        }
+        else -> throw IllegalArgumentException()
     }
 }

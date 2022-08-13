@@ -28,8 +28,6 @@ class ConnectiveLiveData(context: Context): LiveData<Boolean>() {
             val networkCapabilities = cm.getNetworkCapabilities(network)
             if (networkCapabilities?.hasCapability(NET_CAPABILITY_INTERNET) == true) {
                 postValue(true)
-            } else {
-                postValue(false)
             }
         }
 
