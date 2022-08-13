@@ -8,7 +8,7 @@ import com.example.yetanothertodolist.ui.model.TodoItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MainActivityViewModel(private val repository: TodoItemRepository): ViewModel() {
+class MainActivityViewModel(private val repository: TodoItemRepository) : ViewModel() {
     /**
      * При первом заходе список скачивается, дальше уже только добавляется на сервер через patch
      * Если мы перевернем экран, нам надо все равно помнить, что мы уже скачивали список
@@ -19,18 +19,7 @@ class MainActivityViewModel(private val repository: TodoItemRepository): ViewMod
      */
     var listIsNotReceived = true
 
-
-    fun callToRepository(
-        action: Action
-    ) {
-        when (action) {
-            Action.GetList -> { viewModelScope.launch(Dispatchers.IO) { repository.getList()}}
-            Action.UpdateList -> { viewModelScope.launch(Dispatchers.IO) { repository.updateList() } }
-            else -> throw IllegalArgumentException()
-        }
-    }
-
-    fun setErrorManager(em: ErrorManager){
+    fun setErrorManager(em: ErrorManager) {
         repository.errorManager = em
     }
 
@@ -41,4 +30,22 @@ class MainActivityViewModel(private val repository: TodoItemRepository): ViewMod
     var isConnected = false
 
     var firstLaunch = true
+
+    fun hasConnection() {
+        if (listIsNotReceived)
+            viewModelScope.launch(Dispatchers.IO) {
+                repository.getList()
+                listIsNotReceived = false
+            }
+        else
+            viewModelScope.launch(Dispatchers.IO) {
+                repository.updateList()
+            }
+    }
+
+    fun updateList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateList()
+        }
+    }
 }

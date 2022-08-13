@@ -1,16 +1,14 @@
 package com.example.yetanothertodolist.ui.view.MainActivity
 
-import android.content.Context
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.example.yetanothertodolist.R
+import com.example.yetanothertodolist.YetAnotherApplication
 import com.example.yetanothertodolist.data.FiveZeroZeroException
 import com.example.yetanothertodolist.data.FourZeroFourException
 import com.example.yetanothertodolist.data.FourZeroOneException
 import com.example.yetanothertodolist.data.FourZeroZeroException
-import com.example.yetanothertodolist.other.ConnectiveLiveData
 import com.example.yetanothertodolist.other.ErrorManager
-import com.example.yetanothertodolist.ui.stateholders.Action
 import com.example.yetanothertodolist.ui.stateholders.MainActivityViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
@@ -30,7 +28,7 @@ class SnackBarErrorManager(
 
     init {
         viewModel.setErrorManager(this)
-        setInternetChangeListener(mainActivity.applicationContext)
+        setInternetChangeListener()
     }
 
     /**
@@ -61,8 +59,13 @@ class SnackBarErrorManager(
             } catch (e: Exception) {
                 when (e) {
                     is FourZeroOneException, is FiveZeroZeroException -> authError(action!!)
-                    is FourZeroFourException, is FourZeroZeroException -> notFountError(action!!)
-                    is UnknownHostException -> internetConnectionError(action!!)
+                    is FourZeroFourException, is FourZeroZeroException -> notFoundError(action!!)
+                    is UnknownHostException -> {
+                        /**
+                         * Ели нет интернета, нужно просто показать снекбары, этим занимается
+                         * метод [setInternetChangeListener]
+                         */
+                    }
                     else -> unknownError()
                 }
             }
@@ -72,23 +75,17 @@ class SnackBarErrorManager(
         getSnackBarWithoutAction(R.string.unknownError)
     }
 
-    /**
-     * Отсутствие интернета не обрабатываем, этим занимается [setInternetChangeListener]
-     */
-    private fun internetConnectionError(action: suspend () -> Unit) {
-
-    }
-
-    private fun notFountError(action: suspend () -> Unit) {
-        viewModel.callToRepository(Action.UpdateList)
+    private fun notFoundError(action: suspend () -> Unit) {
+        viewModel.updateList()
     }
 
     private fun authError(action: suspend () -> Unit) {
         getSnackBar(R.string.unknownError, R.string.retry, action)
     }
 
-    private fun setInternetChangeListener(context: Context) {
-        val connectiveLiveData = ConnectiveLiveData(context)
+    private fun setInternetChangeListener() {
+        val connectiveLiveData =
+            (mainActivity.applicationContext as YetAnotherApplication).applicationComponent.internetListener
         connectiveLiveData.observe(mainActivity) {
             if (it) {
                 internetTrue()
@@ -111,12 +108,7 @@ class SnackBarErrorManager(
         else
             viewModel.firstLaunch = false
 
-        if (viewModel.listIsNotReceived) {
-            viewModel.listIsNotReceived = false
-            viewModel.callToRepository(Action.GetList)
-        } else {
-            viewModel.callToRepository(Action.UpdateList)
-        }
+        viewModel.hasConnection()
         viewModel.isConnected = true
     }
 

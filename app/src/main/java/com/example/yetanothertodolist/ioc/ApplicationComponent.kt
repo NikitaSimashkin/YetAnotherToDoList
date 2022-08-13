@@ -1,12 +1,14 @@
 package com.example.yetanothertodolist.ioc
 
 import android.content.Context
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.yetanothertodolist.other.UpdateListWorker
 import com.example.yetanothertodolist.data.sources.DataSource
 import com.example.yetanothertodolist.data.repository.TodoItemRepository
 import com.example.yetanothertodolist.data.sources.YetAnotherAPI
+import com.example.yetanothertodolist.other.ConnectiveLiveData
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -27,6 +29,8 @@ class ApplicationComponent(applicationContext: Context) {
     val repository = TodoItemRepository(dataSource)
 
     val viewModelFactory = ViewModelFactory(repository)
+
+    val internetListener = ConnectiveLiveData(applicationContext)
 
     init {
         setWorkManager(applicationContext)
@@ -78,6 +82,10 @@ class ApplicationComponent(applicationContext: Context) {
     private fun setWorkManager(context: Context) {
         val updateListRequest =
             PeriodicWorkRequestBuilder<UpdateListWorker>(8, TimeUnit.HOURS).build()
-        WorkManager.getInstance(context).enqueue(updateListRequest)
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "UpdateList",
+            ExistingPeriodicWorkPolicy.KEEP,
+            updateListRequest
+        )
     }
 }
