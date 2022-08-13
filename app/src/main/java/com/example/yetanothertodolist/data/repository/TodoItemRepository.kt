@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.yetanothertodolist.data.sources.DataSource
 import com.example.yetanothertodolist.ui.model.TodoItem
-import com.example.yetanothertodolist.ui.view.MainActivity.ErrorManager
+import com.example.yetanothertodolist.other.ErrorManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -94,11 +94,10 @@ class TodoItemRepository(
 
     /**
      * Да, иногда надо обязательно сходить в сеть, даже если errorManager нету
-     * Этот метод создан только для workManager, я бы его пометил какой-нибудь аннотацией, но
-     * не знаю какой
+     * Этот метод создан только для workManager
      */
     suspend fun serverGetListWithoutErrorManager(){
-        val list = dataSource.getList()
+        val list = try { dataSource.getList() } catch (e: Exception) {_tasks.value!!}
         withContext(Dispatchers.Main){_tasks.value = list}
     }
 }

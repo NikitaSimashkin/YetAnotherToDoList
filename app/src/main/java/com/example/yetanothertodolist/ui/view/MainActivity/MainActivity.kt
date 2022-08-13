@@ -5,7 +5,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.YetAnotherApplication
-import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
+import com.example.yetanothertodolist.ioc.MainActivity.MainActivityViewComponent
+import com.example.yetanothertodolist.ui.stateholders.MainActivityViewModel
 
 /**
  * Главное и единственное activity, на котором отобраюажтся фрагменты
@@ -13,7 +14,7 @@ import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
 class MainActivity : AppCompatActivity() {
 
     private var mainActivityViewComponent: MainActivityViewComponent? = null
-    private val viewModel: ListFragmentViewModel by viewModels {
+    private val viewModel: MainActivityViewModel by viewModels {
         (application as YetAnotherApplication).applicationComponent.viewModelFactory
     }
 

@@ -9,7 +9,7 @@ import com.example.yetanothertodolist.ui.view.listFragment.ListFragment
 import com.example.yetanothertodolist.ui.view.listFragment.TodoAdapter
 
 /**
- * Компонент фрагмента листа, хранит адаптер и устанавливает слушатель на изменение интернета
+ * Компонент фрагмента листа, хранит адаптер
  */
 class ListFragmentComponent(
     context: Context,
@@ -18,22 +18,4 @@ class ListFragmentComponent(
     private val applicationComponent: ApplicationComponent
 ) {
     val adapter = TodoAdapter(viewModel, context)
-
-    init {
-        setInternetChangeListener(context)
-    }
-
-    private fun setInternetChangeListener(context: Context) {
-        ConnectiveLiveData(context).observe(fragment.requireActivity()) {
-            if (it) {
-                if (viewModel.firstLaunch){
-                    viewModel.callToRepository(Action.GetList)
-                    viewModel.firstLaunch = false
-                } else
-                    viewModel.callToRepository(Action.UpdateList)
-            } else {
-                // не придумал что тут делать
-            }
-        }
-    }
 }

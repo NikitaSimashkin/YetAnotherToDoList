@@ -88,5 +88,6 @@ class DataSource(private val api: YetAnotherAPI) {
             404 -> throw FourZeroFourException()
             500 -> throw FiveZeroZeroException()
         }
+        // throw FiveZeroZeroException()
     }
 }

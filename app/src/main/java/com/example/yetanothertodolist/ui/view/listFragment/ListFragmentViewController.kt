@@ -29,16 +29,6 @@ class ListFragmentViewController(
     fun setUpView() {
         setUpAdapter()
         setFloatingButton()
-        setUpNotificationButton()
-    }
-
-    private fun setUpNotificationButton() {
-        binding.notification.isSelected = viewModel.noticeFlag ?: true
-        binding.notification.setOnClickListener {
-            val button = it as ImageButton
-            button.isSelected = !button.isSelected
-            viewModel.changeNoticeFlag()
-        }
     }
 
     private fun setFloatingButton() {
