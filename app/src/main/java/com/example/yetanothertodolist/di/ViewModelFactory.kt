@@ -1,4 +1,4 @@
-package com.example.yetanothertodolist.ioc
+package com.example.yetanothertodolist.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -6,11 +6,14 @@ import com.example.yetanothertodolist.data.repository.TodoItemRepository
 import com.example.yetanothertodolist.ui.stateholders.AddFragmentViewModel
 import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
 import com.example.yetanothertodolist.ui.stateholders.MainActivityViewModel
+import javax.inject.Inject
+
 
 /**
  * Фабрика для создания viewModel, передает обоим viewModel репозиторий
  */
-class ViewModelFactory(
+@ApplicationScope
+class ViewModelFactory @Inject constructor(
     val repository: TodoItemRepository
 ) : ViewModelProvider.Factory {
 

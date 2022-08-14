@@ -3,25 +3,32 @@ package com.example.yetanothertodolist.ui.view.MainActivity
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.example.yetanothertodolist.R
-import com.example.yetanothertodolist.YetAnotherApplication
 import com.example.yetanothertodolist.data.FiveZeroZeroException
 import com.example.yetanothertodolist.data.FourZeroFourException
 import com.example.yetanothertodolist.data.FourZeroOneException
 import com.example.yetanothertodolist.data.FourZeroZeroException
+import com.example.yetanothertodolist.di.MainActivityComponentScope
+import com.example.yetanothertodolist.other.ConnectiveLiveData
 import com.example.yetanothertodolist.other.ErrorManager
 import com.example.yetanothertodolist.ui.stateholders.MainActivityViewModel
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
-import kotlin.Exception
+import javax.inject.Inject
 
 /**
  * Класс, который ловит ошибки и отображает их через снэкбар
  * Из за хранения контейнера я отношу его к UI слою, поэтому с репозиторием общаемся через viewModel
  */
-class SnackBarErrorManager(
+
+@MainActivityComponentScope
+class SnackBarErrorManager @Inject constructor(
     private val mainActivity: MainActivity,
-    private val viewModel: MainActivityViewModel
+    private val viewModel: MainActivityViewModel,
+    private val connectiveLiveData: ConnectiveLiveData
 ) : ErrorManager {
 
     private val mainActivityContainer: View = mainActivity.findViewById(R.id.main_root)
@@ -62,7 +69,7 @@ class SnackBarErrorManager(
                     is FourZeroFourException, is FourZeroZeroException -> notFoundError(action!!)
                     is UnknownHostException -> {
                         /**
-                         * Ели нет интернета, нужно просто показать снекбары, этим занимается
+                         * Ели нет интернета, нужно просто показать снекбар, этим занимается
                          * метод [setInternetChangeListener]
                          */
                     }
@@ -84,8 +91,6 @@ class SnackBarErrorManager(
     }
 
     private fun setInternetChangeListener() {
-        val connectiveLiveData =
-            (mainActivity.applicationContext as YetAnotherApplication).applicationComponent.internetListener
         connectiveLiveData.observe(mainActivity) {
             if (it) {
                 internetTrue()

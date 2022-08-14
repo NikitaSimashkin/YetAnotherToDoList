@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.yetanothertodolist.data.repository.TodoItemRepository
 import com.example.yetanothertodolist.other.ErrorManager
-import com.example.yetanothertodolist.ui.model.TodoItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

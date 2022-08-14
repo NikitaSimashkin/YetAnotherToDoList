@@ -6,13 +6,21 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.yetanothertodolist.R
+import com.example.yetanothertodolist.di.AddFragmentComponentScope
+import com.example.yetanothertodolist.di.ResImportanceAdapter
+import com.example.yetanothertodolist.di.TextviewImportanceAdapter
+import javax.inject.Inject
 
 /**
  * Адаптер для spinner на фрагменте добавления
  */
-class ImportanceAdapter(context: Context, resource: Int, textViewResourceId: Int) :
+@AddFragmentComponentScope
+class ImportanceAdapter @Inject constructor(
+    context: Context,
+    @ResImportanceAdapter resource: Int,
+    @TextviewImportanceAdapter textViewResourceId: Int
+) :
     ArrayAdapter<String>(context, resource, textViewResourceId) {
-
     init {
         addAll(context.resources.getStringArray(R.array.importance).toList())
     }

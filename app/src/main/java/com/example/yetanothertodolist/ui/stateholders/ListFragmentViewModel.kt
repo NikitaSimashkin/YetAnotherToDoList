@@ -2,16 +2,10 @@ package com.example.yetanothertodolist.ui.stateholders
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.yetanothertodolist.data.FiveZeroZeroException
-import com.example.yetanothertodolist.data.FourZeroFourException
-import com.example.yetanothertodolist.data.FourZeroOneException
-import com.example.yetanothertodolist.data.FourZeroZeroException
 import com.example.yetanothertodolist.data.repository.TodoItemRepository
 import com.example.yetanothertodolist.ui.model.TodoItem
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.net.UnknownHostException
 
 /**
  * viewModel для работы с репозиторием

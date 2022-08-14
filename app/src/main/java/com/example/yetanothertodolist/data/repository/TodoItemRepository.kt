@@ -3,16 +3,20 @@ package com.example.yetanothertodolist.data.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.yetanothertodolist.data.sources.DataSource
-import com.example.yetanothertodolist.ui.model.TodoItem
+import com.example.yetanothertodolist.di.ApplicationScope
 import com.example.yetanothertodolist.other.ErrorManager
-import kotlinx.coroutines.*
+import com.example.yetanothertodolist.ui.model.TodoItem
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 /**
  *  Через этот класс идет вся работа с данными
  */
-class TodoItemRepository(
+@ApplicationScope
+class TodoItemRepository @Inject constructor(
     private val dataSource: DataSource,
 ) {
 
@@ -65,12 +69,12 @@ class TodoItemRepository(
         serverUpdateList()
     }
 
-    suspend fun getItem(id: String): TodoItem {
+    suspend fun getItem(id: String): TodoItem? {
         var item: TodoItem? = null
         errorManager?.launchWithHandler {
             item = serverGetItem(id)
         }
-        return item!!
+        return item
     }
 
     private suspend fun serverGetItem(id: String) = dataSource.getItem(id)

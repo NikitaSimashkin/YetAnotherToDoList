@@ -5,14 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yetanothertodolist.R
-import com.example.yetanothertodolist.ui.stateholders.Action
 import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
-import kotlinx.coroutines.*
+import javax.inject.Inject
 
 /**
  * Адаптер для RecyclerView на фрагменте листа, отображает список заданий
  */
-class TodoAdapter(
+class TodoAdapter @Inject constructor(
     private val viewModel: ListFragmentViewModel,
     context: Context
 ) : RecyclerView.Adapter<TaskHolder>() {

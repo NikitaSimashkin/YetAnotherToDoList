@@ -8,14 +8,16 @@ import androidx.navigation.findNavController
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.databinding.AddFragmentBinding
 import com.example.yetanothertodolist.ui.model.TodoItem
-import com.example.yetanothertodolist.ui.stateholders.*
+import com.example.yetanothertodolist.ui.stateholders.Action
+import com.example.yetanothertodolist.ui.stateholders.AddFragmentViewModel
 import com.google.android.material.snackbar.Snackbar
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import javax.inject.Inject
 
 /** Контроллер вьюшек для addFragment */
-class AddFragmentViewController(
+class AddFragmentViewController @Inject constructor(
     private val binding: AddFragmentBinding,
     private val addModel: AddFragmentViewModel,
     private val adapter: ImportanceAdapter
@@ -25,10 +27,8 @@ class AddFragmentViewController(
 
     fun setUpViews(task: Any?) {
         if (!addModel.valuesAlreadySet) {
-            if (task == null)
-                addModel.setStartValues()
-            else
-                addModel.setItemValues(task as TodoItem)
+            if (task == null) addModel.setStartValues()
+            else addModel.setItemValues(task as TodoItem)
             addModel.valuesAlreadySet = true
         }
         spinnerSetUp()
@@ -102,9 +102,8 @@ class AddFragmentViewController(
     }
 
     private fun showDatePicker() {
-        if (datePicker == null) {
+        if (datePicker == null)
             createDatePicker()
-        }
         datePicker!!.show()
     }
 
@@ -129,11 +128,10 @@ class AddFragmentViewController(
     }
 
     private fun switch() {
-        if (binding.dateAddFragment.text.isEmpty()) {
+        if (binding.dateAddFragment.text.isEmpty())
             showDatePicker()
-        } else {
+        else
             binding.dateAddFragment.text = ""
-        }
         binding.calendarSwitch.isChecked = !binding.calendarSwitch.isChecked
     }
 
