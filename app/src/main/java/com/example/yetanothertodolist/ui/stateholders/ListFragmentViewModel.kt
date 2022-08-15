@@ -34,4 +34,6 @@ class ListFragmentViewModel(private val repository: TodoItemRepository) : ViewMo
             else -> throw IllegalArgumentException()
         }
     }
+
+    var eyeButton = true
 }

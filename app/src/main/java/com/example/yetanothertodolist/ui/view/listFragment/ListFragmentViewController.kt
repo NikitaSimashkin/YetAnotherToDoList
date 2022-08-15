@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.databinding.ListFragmentBinding
 import com.example.yetanothertodolist.di.ListFragmentComponentViewScope
-import com.example.yetanothertodolist.ui.model.TodoItem
 import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
 import javax.inject.Inject
 
@@ -35,7 +34,19 @@ class ListFragmentViewController @Inject constructor(
     }
 
     private fun setEyeIcon() {
-        // TODO: на следующей неделе доделаю
+        changeEye()
+        binding.eye.setOnClickListener {
+            viewModel.eyeButton = !viewModel.eyeButton
+            changeEye()
+            updateAdapter()
+        }
+    }
+
+    private fun changeEye() {
+        if (viewModel.eyeButton)
+            binding.eye.setImageResource(R.drawable.eye_icon)
+        else
+            binding.eye.setImageResource(R.drawable.eye_no_icon)
     }
 
     private fun setFloatingButton() {
@@ -53,13 +64,17 @@ class ListFragmentViewController @Inject constructor(
         binding.recyclerView.adapter = adapter
 
         viewModel.tasks.observe(lifecycleOwner) {
-            val callback =
-                TodoAdapterDiffUtil(adapter.info, viewModel.tasks.value as List<TodoItem>)
-            val res = DiffUtil.calculateDiff(callback)
-            res.dispatchUpdatesTo(adapter)
-            adapter.info = ArrayList(viewModel.tasks.value!!)
-            updateNumber() // считаем колво выполненных заданий
+            updateAdapter()
+            updateNumber()
         }
+    }
+
+    private fun updateAdapter(){
+        val listToAdapter = if (viewModel.eyeButton) viewModel.tasks.value else viewModel.tasks.value!!.filter { !it.done }
+        val callback = TodoAdapterDiffUtil(adapter.info, listToAdapter!!)
+        val res = DiffUtil.calculateDiff(callback)
+        res.dispatchUpdatesTo(adapter)
+        adapter.info = ArrayList(listToAdapter)
     }
 
     private fun updateNumber() {
