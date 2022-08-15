@@ -7,6 +7,7 @@
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/drawable/back_secondary_with_corners.xml" value="0.1155" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/drawable/checkboxselector.xml" value="0.1155" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/drawable/eye_icon.xml" value="0.107" />
+        <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/drawable/eye_no_icon.xml" value="0.2595" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/drawable/ic_launcher_background.xml" value="0.107" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/drawable/icon_add.xml" value="0.1115" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/drawable/icon_delete.xml" value="0.1115" />
@@ -20,10 +21,10 @@
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/drawable/red_checkbox.xml" value="0.1115" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/drawable/selector_for_notification_button.xml" value="0.2585" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/drawable/task_item.xml" value="0.107" />
-        <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/activity_main.xml" value="0.536" />
+        <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/activity_main.xml" value="0.2301038062283737" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/add_fragment.xml" value="0.264" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/importance_item.xml" value="0.11302083333333333" />
-        <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/list_fragment.xml" value="0.4" />
+        <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/list_fragment.xml" value="0.264" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/task_item.xml" value="0.6" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/todo_item.xml" value="0.4" />
       </map>
@@ -34,5 +35,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.264" />
+      </ProjectState>
+    </option>
   </component>
 </project>

@@ -1,21 +1,23 @@
 package com.example.yetanothertodolist.data.sources
 
-import com.example.yetanothertodolist.data.model.ServerList
-import com.example.yetanothertodolist.data.model.ServerOneElement
 import com.example.yetanothertodolist.Backend.toServerTodoItem
 import com.example.yetanothertodolist.Backend.toTodoItem
 import com.example.yetanothertodolist.data.FiveZeroZeroException
 import com.example.yetanothertodolist.data.FourZeroFourException
 import com.example.yetanothertodolist.data.FourZeroOneException
 import com.example.yetanothertodolist.data.FourZeroZeroException
+import com.example.yetanothertodolist.data.model.ServerList
+import com.example.yetanothertodolist.data.model.ServerOneElement
+import com.example.yetanothertodolist.di.ApplicationScope
 import com.example.yetanothertodolist.ui.model.TodoItem
-import java.net.UnknownHostException
+import javax.inject.Inject
 
 
 /**
  * Класс для получения информации
  */
-class DataSource(private val api: YetAnotherAPI) {
+@ApplicationScope
+class DataSource @Inject constructor(private val api: YetAnotherAPI) {
 
     private var lastRevision = 0L
 

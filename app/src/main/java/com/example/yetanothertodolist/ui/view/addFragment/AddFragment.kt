@@ -3,13 +3,11 @@ package com.example.yetanothertodolist.ui.view.addFragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import com.example.yetanothertodolist.R
-import com.example.yetanothertodolist.YetAnotherApplication
 import com.example.yetanothertodolist.databinding.AddFragmentBinding
-import com.example.yetanothertodolist.ioc.addFragment.AddFragmentComponent
-import com.example.yetanothertodolist.ioc.addFragment.AddFragmentViewComponent
-import com.example.yetanothertodolist.ui.stateholders.AddFragmentViewModel
+import com.example.yetanothertodolist.di.AddFragmentComponent
+import com.example.yetanothertodolist.di.AddFragmentComponentView
+import com.example.yetanothertodolist.ui.view.MainActivity.MainActivity
 import com.example.yetanothertodolist.ui.view.listFragment.ListFragmentViewController
 
 /**
@@ -17,36 +15,29 @@ import com.example.yetanothertodolist.ui.view.listFragment.ListFragmentViewContr
  */
 class AddFragment : Fragment(R.layout.add_fragment) {
 
-    private val addModel: AddFragmentViewModel by activityViewModels {
-        (requireContext().applicationContext as YetAnotherApplication).applicationComponent.viewModelFactory
+    private val mainActivityComponent by lazy { (requireActivity() as MainActivity).mainActivityComponent }
+
+    private val addFragmentComponent: AddFragmentComponent by lazy {
+        mainActivityComponent.addFragmentComponent().create(this)
     }
 
-    private lateinit var addFragmentComponent: AddFragmentComponent
-
-    private var addFragmentViewComponent: AddFragmentViewComponent? = null
+    private var addFragmentComponentView: AddFragmentComponentView? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = AddFragmentBinding.bind(view)
 
-        var task: Any? =
+        val task: Any? =
             requireArguments().get(ListFragmentViewController.TASK_TAG) // редактируемое задание
-
-        addFragmentViewComponent =
-            AddFragmentViewComponent(binding, addModel, addFragmentComponent)
-        addFragmentViewComponent!!.addFragmentViewController.setUpViews(task)
+        addFragmentComponentView = addFragmentComponent.addFragmentComponentView().create(binding)
+        addFragmentComponentView!!.addFragmentViewController.setUpViews(task)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        addFragmentComponent = AddFragmentComponent(
-            requireContext(),
-            this,
-            (requireContext().applicationContext as YetAnotherApplication).applicationComponent
-        )
         super.onCreate(savedInstanceState)
     }
 
     override fun onDestroyView() {
-        addFragmentViewComponent = null
+        addFragmentComponentView = null
         super.onDestroyView()
     }
 }

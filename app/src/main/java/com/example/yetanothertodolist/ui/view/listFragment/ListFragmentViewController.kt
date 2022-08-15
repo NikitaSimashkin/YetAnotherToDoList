@@ -1,6 +1,5 @@
 package com.example.yetanothertodolist.ui.view.listFragment
 
-import android.widget.ImageButton
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
@@ -8,13 +7,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.databinding.ListFragmentBinding
+import com.example.yetanothertodolist.di.ListFragmentComponentViewScope
 import com.example.yetanothertodolist.ui.model.TodoItem
 import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
+import javax.inject.Inject
 
 /**
  * Контроллер вьшек фрагмента листа
  */
-class ListFragmentViewController(
+@ListFragmentComponentViewScope
+class ListFragmentViewController @Inject constructor(
     private val binding: ListFragmentBinding,
     private val viewModel: ListFragmentViewModel,
     private val adapter: TodoAdapter,
@@ -29,6 +31,11 @@ class ListFragmentViewController(
     fun setUpView() {
         setUpAdapter()
         setFloatingButton()
+        setEyeIcon()
+    }
+
+    private fun setEyeIcon() {
+        // TODO: на следующей неделе доделаю
     }
 
     private fun setFloatingButton() {

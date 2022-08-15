@@ -6,7 +6,6 @@ import com.example.yetanothertodolist.data.repository.TodoItemRepository
 import com.example.yetanothertodolist.ui.model.TodoItem
 import com.example.yetanothertodolist.ui.view.addFragment.Importance
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.util.*
@@ -77,7 +76,7 @@ class AddFragmentViewModel(private val repository: TodoItemRepository) : ViewMod
     }
 
     /**
-     * Оставил в этом методе только те действия, которые должнна уметь эта ViewModel
+     * Оставил в этом методе только те действия, которые должна уметь эта ViewModel
      */
     fun callToRepository(
         action: Action,
