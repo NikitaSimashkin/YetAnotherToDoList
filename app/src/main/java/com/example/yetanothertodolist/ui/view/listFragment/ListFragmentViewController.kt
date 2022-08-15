@@ -30,10 +30,10 @@ class ListFragmentViewController @Inject constructor(
     fun setUpView() {
         setUpAdapter()
         setFloatingButton()
-        setEyeIcon()
+        setEyeButton()
     }
 
-    private fun setEyeIcon() {
+    private fun setEyeButton() {
         changeEye()
         binding.eye.setOnClickListener {
             viewModel.eyeButton = !viewModel.eyeButton
