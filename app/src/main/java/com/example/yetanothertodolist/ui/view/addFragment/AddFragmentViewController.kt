@@ -22,11 +22,11 @@ class AddFragmentViewController @Inject constructor(
     private val addModel: AddFragmentViewModel,
     private val adapter: ImportanceAdapter
 ) {
-    private var datePicker: DatePickerDialog? = null
+    private lateinit var datePicker: DatePickerDialog
     private val context = binding.close.context
 
     fun setUpViews(task: Any?) {
-        if (!addModel.valuesAlreadySet) {
+        if (!addModel.valuesAlreadySet) { // эта логика должна быть внутри вьюмодели
             if (task == null) addModel.setStartValues()
             else addModel.setItemValues(task as TodoItem)
             addModel.valuesAlreadySet = true
@@ -70,7 +70,7 @@ class AddFragmentViewController @Inject constructor(
     }
 
     private fun setListenerForModelDescription() {
-        binding.description.doOnTextChanged { text, start, before, count ->
+        binding.description.doOnTextChanged { text, start, before, count -> // знаешь про two way data binding?
             addModel.description = text.toString()
         }
     }
@@ -78,8 +78,9 @@ class AddFragmentViewController @Inject constructor(
     private fun setModelField() = with(binding) {
         description.setText(addModel.description)
         spinner.setSelection(addModel.importance.ordinal)
-        if (addModel.deadline != null) {
-            dateAddFragment.text = addModel.deadline!!.toLocalDate().toString()
+        val deadline = addModel.deadline
+        if (deadline != null) {
+            dateAddFragment.text = deadline.toLocalDate().toString()
             calendarSwitch.isChecked = true
         } else {
             dateAddFragment.text = ""
@@ -102,27 +103,27 @@ class AddFragmentViewController @Inject constructor(
     }
 
     private fun showDatePicker() {
-        if (datePicker == null)
+        if (!::datePicker.isInitialized)
             createDatePicker()
-        datePicker!!.show()
+        datePicker.show()
     }
 
     private fun createDatePicker() {
         datePicker = DatePickerDialog(context, R.style.Calendar)
-        datePicker!!.setButton(
+        datePicker.setButton(
             DatePickerDialog.BUTTON_POSITIVE,
             context.getText(R.string.ready),
             datePicker
         )
-        datePicker!!.setButton(
+        datePicker.setButton(
             DatePickerDialog.BUTTON_NEGATIVE,
             context.getText(R.string.cancel),
             datePicker
         )
-        datePicker!!.setOnDateSetListener { _, year, month, dayOfMonth ->
+        datePicker.setOnDateSetListener { _, year, month, dayOfMonth ->
             binding.dateAddFragment.text = LocalDate.of(year, month, dayOfMonth).toString()
         }
-        datePicker!!.setOnCancelListener {
+        datePicker.setOnCancelListener {
             if (binding.dateAddFragment.text.isEmpty()) binding.calendarSwitch.isChecked = false
         }
     }
@@ -176,7 +177,8 @@ class AddFragmentViewController @Inject constructor(
     }
 
     private fun updateTask(item: TodoItem) {
-        addModel.callToRepository(Action.Update, item)
+        addModel.callToRepository(Action.Update, item) // не надо говорить вьюмодели
+        // "вызови репозиторий", надо говорить ей "обнови item", а дальше пусть сама решает
         closeFragment()
     }
 

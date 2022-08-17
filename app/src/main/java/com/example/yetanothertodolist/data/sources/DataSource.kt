@@ -21,7 +21,8 @@ class DataSource @Inject constructor(private val api: YetAnotherAPI) {
 
     private var lastRevision = 0L
 
-    suspend fun getList(): List<TodoItem> {
+    suspend fun getList(): List<TodoItem> { // если превращением в TodoItem занимается датасоурс,
+        // почему TodoItem лежит в папке ui?
         val answer = api.getList()
         val newList = answer.body()!!.list.map { it.toTodoItem() }
 

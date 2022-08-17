@@ -8,7 +8,7 @@ import com.example.yetanothertodolist.ui.view.addFragment.Importance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 
 /**
  * viewModel для сохранения состояния фрагмента добавления
@@ -32,7 +32,7 @@ class AddFragmentViewModel(private val repository: TodoItemRepository) : ViewMod
 
     var lastUpdateBy: String = "Me"
 
-    var valuesAlreadySet = false
+    var valuesAlreadySet = false // булевы флажки это плохо, лучше принимать TodoItem в конструкторе
 
     fun setStartValues() {
         id = UUID.randomUUID().toString()
@@ -95,6 +95,6 @@ class AddFragmentViewModel(private val repository: TodoItemRepository) : ViewMod
         Action.GetElement -> {
             viewModelScope.launch(Dispatchers.IO) { repository.getItem(id!!) }
         }
-        else -> throw IllegalArgumentException()
+        else -> throw IllegalArgumentException() // не очень решение
     }
 }

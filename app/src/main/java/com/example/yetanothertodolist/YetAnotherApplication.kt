@@ -14,7 +14,9 @@ class YetAnotherApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         applicationComponent = DaggerApplicationComponent.factory().create(this)
-        applicationComponent.worker
+        applicationComponent.worker // не принято выполнять действия помощью геттера и не
+        // использовать результат, для этого есть функции. Например, можно было сделать
+        // fun initWorker()
     }
 
 }

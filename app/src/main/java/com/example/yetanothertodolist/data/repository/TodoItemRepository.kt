@@ -27,9 +27,11 @@ class TodoItemRepository @Inject constructor(
      * должны быть в конструкторе" так как ErrorManager не обязательный - без него репозиторий
      * не сломается
      */
-    var errorManager: ErrorManager? = null
+    var errorManager: ErrorManager? = null // и тут у тебя утекла память.
+    // TodoItemRepository в ApplicationScope держит сильную ссылку на ErrorManager, который держит
+    // ссылку на mainActivity.
 
-    private val _tasks = MutableLiveData<List<TodoItem>>(ArrayList())
+    private val _tasks = MutableLiveData<List<TodoItem>>(emptyList())
     val tasks: LiveData<List<TodoItem>> = _tasks
 
     private val mutex = Mutex()
@@ -37,17 +39,21 @@ class TodoItemRepository @Inject constructor(
     suspend fun addItem(item: TodoItem) = mutex.withLock {
         withContext(Dispatchers.IO) {
             val newList = ArrayList(_tasks.value as List<TodoItem>).also { it.add(item) }
-            withContext(Dispatchers.Main){_tasks.value = newList}
-            errorManager?.launchWithHandler {serverAdd(item)}
+            withContext(Dispatchers.Main) {
+                _tasks.value = newList
+            }
+            errorManager?.launchWithHandler { serverAdd(item) }
         }
     }
 
     suspend fun removeItem(item: TodoItem) = mutex.withLock {
         withContext(Dispatchers.IO) {
-            val newList = ArrayList(_tasks.value as List<TodoItem>)
+            val newList = _tasks.value.orEmpty().toMutableList()
             newList.removeIf { it.id == item.id }
-            withContext(Dispatchers.Main){_tasks.value = newList}
-            errorManager?.launchWithHandler {serverRemove(item) }
+            withContext(Dispatchers.Main) {
+                _tasks.value = newList
+            }
+            errorManager?.launchWithHandler { serverRemove(item) }
         }
     }
 

@@ -36,8 +36,8 @@ class ListFragmentViewController @Inject constructor(
     private fun setEyeButton() {
         changeEye()
         binding.eye.setOnClickListener {
-            viewModel.eyeButton = !viewModel.eyeButton
-            changeEye()
+            viewModel.eyeButton = !viewModel.eyeButton // эта логика должна жить во вьюмодели
+            changeEye() // это должно было быть слушателем сооветствующей лайвдаты
             updateAdapter()
         }
     }
@@ -70,7 +70,7 @@ class ListFragmentViewController @Inject constructor(
     }
 
     private fun updateAdapter(){
-        val listToAdapter = if (viewModel.eyeButton) viewModel.tasks.value else viewModel.tasks.value!!.filter { !it.done }
+        val listToAdapter = if (viewModel.eyeButton) viewModel.tasks.value else viewModel.tasks.value!!.filter { !it.done } // это должно быть во вьюмодели и менять само поле tasks
         val callback = TodoAdapterDiffUtil(adapter.info, listToAdapter!!)
         val res = DiffUtil.calculateDiff(callback)
         res.dispatchUpdatesTo(adapter)
@@ -81,7 +81,7 @@ class ListFragmentViewController @Inject constructor(
         binding.completed.text =
             String.format(
                 context.resources.getString(R.string.completed),
-                viewModel.tasks.value!!.count { it.done }
+                viewModel.tasks.value!!.count { it.done } // это тоже должно быть во вьюмодели
             )
     }
 

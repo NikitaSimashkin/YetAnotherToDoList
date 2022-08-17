@@ -104,7 +104,7 @@ class SnackBarErrorManager @Inject constructor(
     private fun internetFalse() {
         if (viewModel.isConnected)
             getSnackBarWithoutAction(R.string.noInternet)
-        viewModel.isConnected = false
+        viewModel.isConnected = false // почему поля нужны для снекбаров, а храняться во вьюмодели?
     }
 
     private fun internetTrue() {

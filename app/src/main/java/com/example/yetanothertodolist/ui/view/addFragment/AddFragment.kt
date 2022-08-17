@@ -28,12 +28,10 @@ class AddFragment : Fragment(R.layout.add_fragment) {
 
         val task: Any? =
             requireArguments().get(ListFragmentViewController.TASK_TAG) // редактируемое задание
-        addFragmentComponentView = addFragmentComponent.addFragmentComponentView().create(binding)
-        addFragmentComponentView!!.addFragmentViewController.setUpViews(task)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        addFragmentComponentView = addFragmentComponent.addFragmentComponentView()
+            .create(binding).apply {
+                addFragmentViewController.setUpViews(task) // старайся избегать nonnull assertion (!!)
+            }
     }
 
     override fun onDestroyView() {

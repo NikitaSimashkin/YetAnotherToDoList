@@ -28,8 +28,7 @@ annotation class ListFragmentComponentScope
 @Module
 object ListFragmentComponentModule{
 
-    @Provides
-    @ListFragmentComponentScope
+    @Provides // тут тебе не нужно, чтобы даггер хранил ссылку в компоненте
     fun viewModel(fragment: Fragment, factory: ViewModelFactory):ListFragmentViewModel{
         val model: ListFragmentViewModel by fragment.activityViewModels { factory }
         return model
