@@ -1,7 +1,7 @@
 package com.example.yetanothertodolist.ui.view.listFragment
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.yetanothertodolist.ui.model.TodoItem
+import com.example.yetanothertodolist.data.model.TodoItem
 
 /**
  * Класс для обновления адаптера

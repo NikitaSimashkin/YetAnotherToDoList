@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Диалоговое окно календаря -->
+    <style name="DatePickerTheme" parent="Theme.Material3.Light.Dialog">
+        <item name="colorAccent">?attr/calendar_color</item>
+        <item name="android:windowBackground">?attr/back_secondary</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/button_for_calendar</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/button_for_calendar</item>
+        <item name="android:colorControlActivated">?attr/calendar_color</item>
+        <item name="android:textColorPrimary">?attr/label_primary</item>
+        <item name="android:textColorSecondary">?attr/label_tertiary</item>
+    </style>
+
+    <!-- Стиль для кнопки календаря-->
+    <style name="button_for_calendar" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/calendar_color</item>
+        <item name="android:textAppearanceButton">@style/TextAppearance.Button</item>
+    </style>
+
+    <!-- Switch -->
+    <style name="MySwitch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="colorControlActivated">?attr/calendar_color</item>
+        <item name="colorSwitchThumbNormal">?attr/back_elevated</item>
+        <item name="android:colorForeground">?attr/color_gray_light</item>
+    </style>
+
+</resources>

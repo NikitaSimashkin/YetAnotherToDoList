@@ -1,5 +1,7 @@
 package com.example.yetanothertodolist.data.sources
 
+import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.example.yetanothertodolist.Backend.toServerTodoItem
 import com.example.yetanothertodolist.Backend.toTodoItem
 import com.example.yetanothertodolist.data.FiveZeroZeroException
@@ -8,8 +10,10 @@ import com.example.yetanothertodolist.data.FourZeroOneException
 import com.example.yetanothertodolist.data.FourZeroZeroException
 import com.example.yetanothertodolist.data.model.ServerList
 import com.example.yetanothertodolist.data.model.ServerOneElement
+import com.example.yetanothertodolist.data.model.TodoItem
 import com.example.yetanothertodolist.di.ApplicationScope
-import com.example.yetanothertodolist.ui.model.TodoItem
+import com.example.yetanothertodolist.other.ConstValues
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 
@@ -17,16 +21,19 @@ import javax.inject.Inject
  * Класс для получения информации
  */
 @ApplicationScope
-class DataSource @Inject constructor(private val api: YetAnotherAPI) {
+class ServerSource @Inject constructor(
+    private val api: YetAnotherAPI,
+    private val sharedPreferences: SharedPreferences
+) {
 
-    private var lastRevision = 0L
+    private var lastRevision = sharedPreferences.getLong(ConstValues.LAST_REVISION_DB, 0)
 
     suspend fun getList(): List<TodoItem> {
         val answer = api.getList()
         val newList = answer.body()!!.list.map { it.toTodoItem() }
 
         checkError(answer.code())
-        lastRevision = answer.body()!!.revision!!
+        updateRevision(answer.body()!!.revision!!)
         return newList
     }
 
@@ -38,7 +45,8 @@ class DataSource @Inject constructor(private val api: YetAnotherAPI) {
         )
 
         checkError(answer.code())
-        lastRevision = answer.body()!!.revision!!
+        updateLastSync()
+        updateRevision(answer.body()!!.revision!!)
         return answer.body()!!.list.map { it.toTodoItem() }
     }
 
@@ -46,7 +54,8 @@ class DataSource @Inject constructor(private val api: YetAnotherAPI) {
         val answer = api.getElement(id)
 
         checkError(answer.code())
-        lastRevision = answer.body()!!.revision!!
+        updateLastSync()
+        updateRevision(answer.body()!!.revision!!)
         return answer.body()!!.element.toTodoItem()
     }
 
@@ -59,7 +68,8 @@ class DataSource @Inject constructor(private val api: YetAnotherAPI) {
         )
 
         checkError(answer.code())
-        lastRevision = answer.body()!!.revision!!
+        updateLastSync()
+        updateRevision(answer.body()!!.revision!!)
     }
 
     suspend fun updateItem(item: TodoItem) {
@@ -73,17 +83,31 @@ class DataSource @Inject constructor(private val api: YetAnotherAPI) {
         )
 
         checkError(answer.code())
-        lastRevision = answer.body()!!.revision!!
+        updateLastSync()
+        updateRevision(answer.body()!!.revision!!)
     }
 
     suspend fun deleteItem(id: String) {
         val answer = api.deleteElement(lastRevision, id)
 
         checkError(answer.code())
-        lastRevision = answer.body()!!.revision!!
+        updateLastSync()
+        updateRevision(answer.body()!!.revision!!)
     }
 
-    var count = 0
+    private fun updateRevision(newRevision: Long) {
+        lastRevision = newRevision
+        sharedPreferences.edit {
+            putLong(ConstValues.LAST_REVISION_DB, lastRevision)
+        }
+    }
+
+    private fun updateLastSync(){
+        sharedPreferences.edit {
+            putString(ConstValues.LAST_SYNCHRONIZE_TIME, LocalDateTime.now().toString())
+        }
+    }
+
     private suspend fun checkError(code: Int) {
         when (code) {
             400 -> throw FourZeroZeroException()

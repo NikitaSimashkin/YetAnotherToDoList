@@ -3,25 +3,27 @@ package com.example.yetanothertodolist.ui.view.listFragment
 import android.content.res.ColorStateList
 import android.graphics.Paint
 import android.view.View
-import androidx.core.os.bundleOf
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yetanothertodolist.R
-import com.example.yetanothertodolist.ui.model.TodoItem
+import com.example.yetanothertodolist.data.model.TodoItem
 import com.example.yetanothertodolist.databinding.TodoItemBinding
-import com.example.yetanothertodolist.ui.stateholders.Action
+import com.example.yetanothertodolist.other.getColor
 import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
 import com.example.yetanothertodolist.ui.view.addFragment.Importance
-import java.time.LocalDateTime
 
 /**
  * ViewHolder для TodoAdapter, отображает одно задание
  */
-class TaskHolder(itemView: View, private val viewModel: ListFragmentViewModel) :
+class TaskHolder(
+    itemView: View,
+    private val viewModel: ListFragmentViewModel,
+    private val listFragmentOpenCloseController: ListFragmentOpenCloseController
+) :
     RecyclerView.ViewHolder(itemView) {
     private var binding: TodoItemBinding = TodoItemBinding.bind(itemView)
 
     fun bind(itemCopy: TodoItem) = with(binding) {
+        textViewTask.transitionName = itemCopy.id
 
         setDescription(itemCopy)
 
@@ -63,10 +65,7 @@ class TaskHolder(itemView: View, private val viewModel: ListFragmentViewModel) :
         checkBoxTask.isChecked = data.done
         changeTextStyle()
         checkBoxTask.setOnClickListener {
-            viewModel.callToRepository(
-                Action.Update,
-                data.copy(done = binding.checkBoxTask.isChecked, changedAt = LocalDateTime.now())
-            )
+            viewModel.changeCheckBox(data, checkBoxTask.isChecked)
             changeTextStyle()
         }
     }
@@ -76,26 +75,23 @@ class TaskHolder(itemView: View, private val viewModel: ListFragmentViewModel) :
     }
 
     private fun setClickListenersToOpenAddFragment(data: TodoItem) = with(binding) {
-        val openAddFragment: View.OnClickListener = View.OnClickListener {
-            itemView.findNavController().navigate(
-                R.id.action_listFragment_to_addFragment,
-                bundleOf(ListFragmentViewController.TASK_TAG to data)
-            )
+        val close: View.OnClickListener = View.OnClickListener {
+            listFragmentOpenCloseController.taskHolderClose(binding, data)
         }
-        todoItemLayout.setOnClickListener(openAddFragment)
-        iconlayout.setOnClickListener(openAddFragment)
-        imagebuttontasklayout.setOnClickListener(openAddFragment)
-        datelayout.setOnClickListener(openAddFragment)
+        todoItemLayout.setOnClickListener(close)
+        iconlayout.setOnClickListener(close)
+        imagebuttontasklayout.setOnClickListener(close)
+        datelayout.setOnClickListener(close)
     }
 
     private fun changeTextStyle() = with(binding) {
         if (checkBoxTask.isChecked) {
             textViewTask.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-            textViewTask.setTextColor(root.resources.getColor(R.color.label_tertiary, null))
+            textViewTask.setTextColor(getColor(root.context, R.attr.label_tertiary))
         } else {
             textViewTask.paintFlags =
                 textViewTask.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-            textViewTask.setTextColor(root.resources.getColor(R.color.label_primary, null))
+            textViewTask.setTextColor(getColor(root.context, R.attr.label_primary))
         }
     }
 }

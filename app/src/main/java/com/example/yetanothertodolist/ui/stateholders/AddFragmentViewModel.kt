@@ -1,10 +1,13 @@
 package com.example.yetanothertodolist.ui.stateholders
 
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.yetanothertodolist.YetAnotherApplication
+import com.example.yetanothertodolist.data.model.TodoItem
 import com.example.yetanothertodolist.data.repository.TodoItemRepository
-import com.example.yetanothertodolist.ui.model.TodoItem
 import com.example.yetanothertodolist.ui.view.addFragment.Importance
+import com.example.yetanothertodolist.util.ConnectiveLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -13,7 +16,10 @@ import java.util.*
 /**
  * viewModel для сохранения состояния фрагмента добавления
  */
-class AddFragmentViewModel(private val repository: TodoItemRepository) : ViewModel() {
+class AddFragmentViewModel(
+    private val repository: TodoItemRepository,
+    private val connectiveLiveData: ConnectiveLiveData,
+) : ViewModel() {
     var id: String = ""
 
     var description: String = ""
@@ -32,9 +38,22 @@ class AddFragmentViewModel(private val repository: TodoItemRepository) : ViewMod
 
     var lastUpdateBy: String = "Me"
 
-    var valuesAlreadySet = false
+    var isDeleted = false
 
-    fun setStartValues() {
+    private val observer: Observer<Boolean> =
+        Observer<Boolean> { value -> isConnected = value; println(isConnected) }
+    private var isConnected: Boolean = connectiveLiveData.value ?: false
+
+    init {
+        connectiveLiveData.observeForever(observer)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        connectiveLiveData.removeObserver(observer)
+    }
+
+    private fun setStartValues() {
         id = UUID.randomUUID().toString()
         description = ""
         importance = Importance.Basic
@@ -43,10 +62,11 @@ class AddFragmentViewModel(private val repository: TodoItemRepository) : ViewMod
         deadline = null
         changedAt = LocalDateTime.now()
         color = null
-        lastUpdateBy = "Me"
+        lastUpdateBy = YetAnotherApplication.deviceId
+        isDeleted = false
     }
 
-    fun setItemValues(item: TodoItem) {
+    private fun setItemValues(item: TodoItem) {
         id = item.id
         description = item.description
         importance = item.importance
@@ -56,10 +76,12 @@ class AddFragmentViewModel(private val repository: TodoItemRepository) : ViewMod
         changedAt = item.changedAt
         color = item.color
         lastUpdateBy = item.lastUpdateBy
+        isDeleted = item.isDeleted
     }
 
-    fun getItem(
-        isNewTask: Boolean = false
+    private fun getItem(
+        isNewTask: Boolean,
+        isDeleted: Boolean = false
     ): TodoItem {
         val changedAt = LocalDateTime.now()
         return TodoItem(
@@ -71,30 +93,56 @@ class AddFragmentViewModel(private val repository: TodoItemRepository) : ViewMod
             deadline = deadline,
             changedAt = changedAt,
             color = color,
-            lastUpdateBy = lastUpdateBy,
+            lastUpdateBy = YetAnotherApplication.deviceId,
+            isDeleted = isDeleted
         )
     }
 
-    /**
-     * Оставил в этом методе только те действия, которые должна уметь эта ViewModel
-     */
-    fun callToRepository(
-        action: Action,
-        item: TodoItem? = null,
-        id: String? = null
-    ) = when (action) {
-        Action.Add -> {
-            viewModelScope.launch(Dispatchers.IO) { repository.addItem(item!!) }
+
+    fun addItem(): TodoItem {
+        val item = getItem(true)
+        viewModelScope.launch(Dispatchers.IO) { repository.addItem(item) }
+        clear()
+
+        return item
+    }
+
+    fun deleteItem(item: TodoItem) {
+        if (isConnected)
+            viewModelScope.launch(Dispatchers.IO) { repository.removeItem(item) }
+        else
+            viewModelScope.launch(Dispatchers.IO) {
+                repository.updateItem(
+                    item.copy(
+                        isDeleted = true,
+                        changedAt = LocalDateTime.now(),
+                        lastUpdateBy = YetAnotherApplication.deviceId
+                    )
+                )
+            }
+        clear()
+    }
+
+    fun updateItem(): TodoItem {
+        val item = getItem(false)
+        viewModelScope.launch(Dispatchers.IO) { repository.updateItem(item) }
+        clear()
+
+        return item
+    }
+
+
+    private var valuesAlreadySet = false
+
+    fun setTask(task: TodoItem?) {
+        if (!valuesAlreadySet) {
+            if (task == null) setStartValues()
+            else setItemValues(task)
+            valuesAlreadySet = true
         }
-        Action.Delete -> {
-            viewModelScope.launch(Dispatchers.IO) { repository.removeItem(item!!) }
-        }
-        Action.Update -> {
-            viewModelScope.launch(Dispatchers.IO) { repository.updateItem(item!!) }
-        }
-        Action.GetElement -> {
-            viewModelScope.launch(Dispatchers.IO) { repository.getItem(id!!) }
-        }
-        else -> throw IllegalArgumentException()
+    }
+
+    fun clear() {
+        valuesAlreadySet = false
     }
 }

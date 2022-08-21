@@ -3,6 +3,7 @@ package com.example.yetanothertodolist.di
 
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.ui.view.addFragment.AddFragment
+import com.example.yetanothertodolist.ui.view.addFragment.AddFragmentOpenCloseController
 import dagger.BindsInstance
 import dagger.Module
 import dagger.Provides
@@ -20,6 +21,7 @@ interface AddFragmentComponent {
     }
 
     fun addFragmentComponentView(): AddFragmentComponentView.Factory
+    fun addFragmentOpenCloseController(): AddFragmentOpenCloseController
 
 }
 

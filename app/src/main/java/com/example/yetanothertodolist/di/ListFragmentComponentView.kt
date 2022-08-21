@@ -19,7 +19,7 @@ interface ListFragmentComponentView {
         fun create(@BindsInstance binding: ListFragmentBinding):ListFragmentComponentView
     }
 
-    val listFragmentViewController: ListFragmentViewController
+    fun listFragmentViewController(): ListFragmentViewController
 }
 
 @Scope

@@ -1,4 +1,4 @@
-package com.example.yetanothertodolist.other
+package com.example.yetanothertodolist.util
 
 
 interface ErrorManager {

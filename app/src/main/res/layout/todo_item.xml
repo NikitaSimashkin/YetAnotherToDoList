@@ -11,6 +11,22 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/checkboxlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <CheckBox
+            android:id="@+id/checkBoxTask"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:checked="false"
+            android:gravity="center"/>
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/imagebuttontasklayout"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -28,26 +44,7 @@
             android:clickable="false"
             android:scaleType="centerInside"
             app:srcCompat="@android:drawable/ic_menu_info_details"
-            app:tint="@color/label_tertiary" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/checkboxlayout"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <CheckBox
-            android:id="@+id/checkBoxTask"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="top"
-            android:checked="false"
-            android:gravity="center"
-            android:keyboardNavigationCluster="false"
-            android:linksClickable="false"
-            android:visibility="visible" />
+            app:tint="?attr/label_tertiary" />
     </FrameLayout>
 
     <FrameLayout
@@ -88,8 +85,8 @@
             android:minLines="1"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textColor="?attr/label_primary"
+            android:textAppearance="@style/TextAppearance.Body" />
 
     </LinearLayout>
 
@@ -110,8 +107,8 @@
             android:layout_height="wrap_content"
             android:gravity="top"
             android:includeFontPadding="false"
-            android:textColor="@color/color_blue"
-            android:textSize="14sp" />
+            android:textColor="?attr/color_blue"
+            android:textAppearance="@style/TextAppearance.Subhead" />
 
     </LinearLayout>
 

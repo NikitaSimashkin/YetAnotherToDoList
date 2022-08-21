@@ -1,14 +1,16 @@
 package com.example.yetanothertodolist.ui.view.listFragment
 
-import androidx.core.os.bundleOf
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yetanothertodolist.R
+import com.example.yetanothertodolist.animations.BoxOfAnimations
 import com.example.yetanothertodolist.databinding.ListFragmentBinding
 import com.example.yetanothertodolist.di.ListFragmentComponentViewScope
+import com.example.yetanothertodolist.other.getColor
 import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
+import com.google.android.material.appbar.AppBarLayout
 import javax.inject.Inject
 
 /**
@@ -19,42 +21,65 @@ class ListFragmentViewController @Inject constructor(
     private val binding: ListFragmentBinding,
     private val viewModel: ListFragmentViewModel,
     private val adapter: TodoAdapter,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val listFragmentOpenCloseController: ListFragmentOpenCloseController,
+    private val themeSelector: ThemeSelector
 ) {
     private val context = binding.recyclerView.context
-
-    companion object {
-        const val TASK_TAG = "Task"
-    }
 
     fun setUpView() {
         setUpAdapter()
         setFloatingButton()
         setEyeButton()
+        setSettingsButton()
+    }
+
+    private fun setSettingsButton() {
+        binding.settingsLayout.setOnClickListener {
+            themeSelector.showDialog()
+        }
+    }
+
+    fun setUpScrolls() {
+        binding.scroll.scrollY = viewModel.scrollPosition
+
+        val behavior =
+            ((binding.appBarLayout.layoutParams as CoordinatorLayout.LayoutParams).behavior as AppBarLayout.Behavior)
+        behavior.topAndBottomOffset = viewModel.appBarOffset
+        binding.appBarLayout.requestLayout()
     }
 
     private fun setEyeButton() {
-        changeEye()
-        binding.eye.setOnClickListener {
-            viewModel.eyeButton = !viewModel.eyeButton
-            changeEye()
+        viewModel.eyeButton.value?.let { changeIconEye(it) }
+        binding.eyeLayout.setOnClickListener {
+            viewModel.changeEye()
+        }
+        viewModel.eyeButton.observe(lifecycleOwner) {
+            changeIconEye(it)
             updateAdapter()
         }
     }
 
-    private fun changeEye() {
-        if (viewModel.eyeButton)
+    private fun changeIconEye(isOpen: Boolean) {
+        if (isOpen)
             binding.eye.setImageResource(R.drawable.eye_icon)
         else
             binding.eye.setImageResource(R.drawable.eye_no_icon)
     }
 
+
+    /**
+     * Не понял зачем делать анимацию кнопки только если список пустой, поэтому я сделал
+     * постоянную анимацию
+     */
     private fun setFloatingButton() {
         binding.floatingActionButton.setOnClickListener {
-            binding.recyclerView.findNavController().navigate(
-                R.id.action_listFragment_to_addFragment,
-                bundleOf(TASK_TAG to null)
+            BoxOfAnimations.changeSizeAndColorAnimation(
+                it,
+                getColor(context, R.attr.color_blue),
+                getColor(context, R.attr.color_red)
             )
+            listFragmentOpenCloseController.plusButtonClose()
         }
     }
 
@@ -69,9 +94,9 @@ class ListFragmentViewController @Inject constructor(
         }
     }
 
-    private fun updateAdapter(){
-        val listToAdapter = if (viewModel.eyeButton) viewModel.tasks.value else viewModel.tasks.value!!.filter { !it.done }
-        val callback = TodoAdapterDiffUtil(adapter.info, listToAdapter!!)
+    private fun updateAdapter() {
+        val listToAdapter = viewModel.getListToAdapter()
+        val callback = TodoAdapterDiffUtil(adapter.info, listToAdapter)
         val res = DiffUtil.calculateDiff(callback)
         res.dispatchUpdatesTo(adapter)
         adapter.info = ArrayList(listToAdapter)
@@ -81,7 +106,7 @@ class ListFragmentViewController @Inject constructor(
         binding.completed.text =
             String.format(
                 context.resources.getString(R.string.completed),
-                viewModel.tasks.value!!.count { it.done }
+                viewModel.getDoneTasks
             )
     }
 

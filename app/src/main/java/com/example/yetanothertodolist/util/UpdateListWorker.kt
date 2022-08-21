@@ -1,4 +1,4 @@
-package com.example.yetanothertodolist.other
+package com.example.yetanothertodolist.util
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -13,7 +13,7 @@ class UpdateListWorker(val context: Context, workerParams: WorkerParameters) : C
     workerParams
 ) {
     override suspend fun doWork(): Result {
-        (context.applicationContext as YetAnotherApplication).applicationComponent.repository.serverGetListWithoutErrorManager()
+        (context.applicationContext as YetAnotherApplication).applicationComponent.repository.updateList()
         return Result.success()
     }
 }

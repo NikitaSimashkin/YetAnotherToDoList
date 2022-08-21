@@ -15,9 +15,12 @@
     <string name="revisionError">Локальный список задач не синхронизирован с сервером</string>
     <string name="unknownError">Что-то пошло не так</string>
     <string name="retry">Повторить</string>
-    <string name="noInternet">Отсуствует соединение с интернетом, новые данные не сохранятся</string>
-    <string name="yesInternet">Интернет подключен, список заданий сохранен на сервер</string>
+    <string name="noInternet">Отсуствует соединение с интернетом, данные не синхронизированы</string>
+    <string name="yesInternet">Интернет подключен, данные синхронизированы</string>
     <string name="later">Попробуйте позже</string>
+    <string name="light_theme">Светлая\nтема</string>
+    <string name="dark_theme">Темная\nтема</string>
+    <string name="system_theme">Систем.\nтема</string>
 
     <string-array name="importance">
         <item>Низкая</item>

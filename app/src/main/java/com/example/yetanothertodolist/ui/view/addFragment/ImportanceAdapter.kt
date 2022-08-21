@@ -9,6 +9,7 @@ import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.di.AddFragmentComponentScope
 import com.example.yetanothertodolist.di.ResImportanceAdapter
 import com.example.yetanothertodolist.di.TextviewImportanceAdapter
+import com.example.yetanothertodolist.other.getColor
 import javax.inject.Inject
 
 /**
@@ -21,6 +22,7 @@ class ImportanceAdapter @Inject constructor(
     @TextviewImportanceAdapter textViewResourceId: Int
 ) :
     ArrayAdapter<String>(context, resource, textViewResourceId) {
+
     init {
         addAll(context.resources.getStringArray(R.array.importance).toList())
     }
@@ -30,7 +32,7 @@ class ImportanceAdapter @Inject constructor(
 
         view.setPadding(0, view.paddingTop, view.paddingRight, view.paddingBottom)
 
-        setItemsColor(position, view, R.color.label_tertiary, R.color.color_red)
+        setItemsColor(position, view, getColor(context, R.attr.label_tertiary), getColor(context, R.attr.color_red))
 
         return view
     }
@@ -38,7 +40,7 @@ class ImportanceAdapter @Inject constructor(
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getDropDownView(position, convertView, parent)
 
-        setItemsColor(position, view, R.color.label_primary, R.color.color_red)
+        setItemsColor(position, view, getColor(context, R.attr.label_primary), getColor(context, R.attr.color_red))
 
         return view
     }
@@ -55,6 +57,6 @@ class ImportanceAdapter @Inject constructor(
     }
 
     private fun changeColor(view: View, id: Int, color: Int) {
-        view.findViewById<TextView>(id).setTextColor(view.context.getColor(color))
+        view.findViewById<TextView>(id).setTextColor(color)
     }
 }

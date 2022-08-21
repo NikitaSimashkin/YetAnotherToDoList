@@ -1,9 +1,15 @@
 package com.example.yetanothertodolist.di
 
 import android.app.Application
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
+import androidx.room.Room
 import com.example.yetanothertodolist.data.repository.TodoItemRepository
+import com.example.yetanothertodolist.data.room.TaskDatabase
+import com.example.yetanothertodolist.data.room.TasksDao
 import com.example.yetanothertodolist.data.sources.YetAnotherAPI
-import com.example.yetanothertodolist.other.WorkManagerCreator
+import com.example.yetanothertodolist.other.ConstValues
+import com.example.yetanothertodolist.util.WorkManagerCreator
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -40,6 +46,27 @@ interface ApplicationComponent {
 
 @Module
 object ApplicationModule {
+
+    @Provides
+    @ApplicationScope
+    fun sharedPreference(application: Application): SharedPreferences{
+        return application.getSharedPreferences(ConstValues.SHARED_PREF_FILE_NAME, MODE_PRIVATE)
+    }
+
+    @Provides
+    @ApplicationScope
+    fun dao(database: TaskDatabase): TasksDao{
+        return database.getDao()
+    }
+
+    @Provides
+    @ApplicationScope
+    fun database(context: Application): TaskDatabase{
+        val database: TaskDatabase by lazy{
+            Room.databaseBuilder(context, TaskDatabase::class.java, "database.db").build()
+        }
+        return database
+    }
 
     @Provides
     @ApplicationScope

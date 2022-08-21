@@ -1,4 +1,4 @@
-package com.example.yetanothertodolist.other
+package com.example.yetanothertodolist.util
 
 import android.app.Application
 import android.content.Context.CONNECTIVITY_SERVICE
@@ -18,6 +18,7 @@ class ConnectiveLiveData @Inject constructor(context: Application): LiveData<Boo
 
     private lateinit var callback: ConnectivityManager.NetworkCallback
     private val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val networks: MutableSet<Network> = HashSet()
 
     override fun onActive() {
         callback = getCallback()
@@ -30,8 +31,9 @@ class ConnectiveLiveData @Inject constructor(context: Application): LiveData<Boo
         override fun onAvailable(network: Network) {
             val networkCapabilities = cm.getNetworkCapabilities(network)
             if (networkCapabilities?.hasCapability(NET_CAPABILITY_INTERNET) == true) {
-                postValue(true)
+                networks.add(network)
             }
+            postValue(networks.size > 0)
         }
 
         override fun onLost(network: Network) {

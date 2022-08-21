@@ -18,7 +18,9 @@ interface AddFragmentComponentView {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance binding: AddFragmentBinding): AddFragmentComponentView
+        fun create(
+            @BindsInstance binding: AddFragmentBinding
+        ): AddFragmentComponentView
     }
 
     val addFragmentViewController: AddFragmentViewController
@@ -28,11 +30,11 @@ interface AddFragmentComponentView {
 annotation class AddFragmentComponentViewScope
 
 @Module
-object AddFragmentComponentViewModule{
+object AddFragmentComponentViewModule {
 
     @Provides
     @AddFragmentComponentViewScope
-    fun viewModel(factory: ViewModelFactory, fragment: AddFragment): AddFragmentViewModel{
+    fun viewModel(factory: ViewModelFactory, fragment: AddFragment): AddFragmentViewModel {
         val viewModel: AddFragmentViewModel by fragment.activityViewModels { factory }
         return viewModel
     }

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/color_gray_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/light_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/stroke"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/light_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="2"
+                android:minLines="2"
+                android:text="@string/light_theme"
+                android:textAppearance="@style/TextAppearance.Title" />
+
+            <ImageView
+                android:id="@+id/light_theme"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="20dp"
+                app:srcCompat="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dark_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/stroke"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dark_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="2"
+                android:minLines="2"
+                android:text="@string/dark_theme"
+                android:textAppearance="@style/TextAppearance.Title" />
+
+            <ImageView
+                android:id="@+id/dark_theme"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="20dp"
+                app:srcCompat="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/system_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/stroke"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/system_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="2"
+                android:minLines="2"
+                android:text="@string/system_theme"
+                android:textAppearance="@style/TextAppearance.Title" />
+
+            <ImageView
+                android:id="@+id/system_theme"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="20dp"
+                app:srcCompat="@drawable/black_white_theme" />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- color for application -->
+    <attr name="support_separator" format="reference|color"/>
+    <attr name="support_overlay" format="reference|color"/>
+
+    <attr name="label_primary" format="reference|color"/>
+    <attr name="label_secondary" format="reference|color"/>
+    <attr name="label_tertiary" format="reference|color"/>
+    <attr name="label_disable" format="reference|color"/>
+
+    <attr name="color_red" format="reference|color"/>
+    <attr name="color_green" format="reference|color"/>
+    <attr name="color_blue" format="reference|color"/>
+    <attr name="color_gray" format="reference|color"/>
+    <attr name="color_gray_light" format="reference|color"/>
+    <attr name="color_white" format="reference|color"/>
+
+    <attr name="back_primary" format="reference|color"/>
+    <attr name="back_secondary" format="reference|color"/>
+    <attr name="back_elevated" format="reference|color"/>
+
+    <!-- color for view -->
+    <attr name="calendar_color" format="reference|color"/>
+</resources>

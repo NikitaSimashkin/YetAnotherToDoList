@@ -5,14 +5,15 @@
     android:id="@+id/coordlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/back_primary">
+    android:background="?attr/back_primary"
+    android:clipToPadding="false">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         style="@style/ThemeOverlay.Material3.BottomAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/back_primary"
+        android:background="?attr/back_primary"
         android:fitsSystemWindows="true"
         app:elevation="15dp">
 
@@ -20,13 +21,15 @@
             android:id="@+id/collapsingtoolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="18dp"
+            android:layout_marginBottom="8dp"
             android:fitsSystemWindows="true"
             app:collapsedTitleGravity="bottom"
-            app:collapsedTitleTextAppearance="@style/CollapsedAppBarPlus1"
+            app:collapsedTitleTextAppearance="@style/TextAppearance.Title"
+            app:collapsedTitleTextColor="?attr/label_primary"
             app:expandedTitleGravity="bottom"
             app:expandedTitleMarginStart="60dp"
-            app:expandedTitleTextAppearance="@style/NotCollapsedAppBarPlus1"
+            app:expandedTitleTextAppearance="@style/TextAppearance.LargeTitle"
+            app:expandedTitleTextColor="?attr/label_primary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/my_business"
             app:titleCollapseMode="scale">
@@ -35,7 +38,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/back_primary"
+                android:background="?attr/back_primary"
                 app:layout_collapseMode="pin" />
 
             <TextView
@@ -43,10 +46,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:gravity="bottom"
-                android:paddingStart="60dp"
+                android:layout_marginStart="60dp"
                 android:text="@string/completed"
-                android:textSize="16sp"
+                android:textAppearance="@style/TextAppearance.Body"
+                android:textColor="?attr/label_tertiary"
                 app:layout_collapseMode="parallax" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,18 +57,49 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="80dp"
-                android:layout_marginRight="24dp"
+                android:layout_marginEnd="24dp"
                 app:layout_scrollFlags="snapMargins|scroll|exitUntilCollapsed">
 
-                <ImageButton
-                    android:id="@+id/eye"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="@null"
+                <FrameLayout
+                    android:id="@+id/settings_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/eye_layout"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageButton
+                        android:id="@+id/settings"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@null"
+                        android:clickable="false"
+                        app:srcCompat="@drawable/settings_icon"
+                        app:tint="?attr/color_gray_light" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/eye_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/eye_icon"
-                    app:tint="@color/color_blue" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageButton
+                        android:id="@+id/eye"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@null"
+                        android:clickable="false"
+                        app:srcCompat="@drawable/eye_icon"
+                        app:tint="?attr/color_blue" />
+                </FrameLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -78,16 +112,18 @@
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/back_primary"
         android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingTop="5dp"
+        android:paddingBottom="20dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/recycler_space"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipChildren="false">
-
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -108,16 +144,6 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
-            <FrameLayout
-                android:id="@+id/space"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerView">
-
-            </FrameLayout>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -125,12 +151,11 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="22dp"
-        android:backgroundTint="@color/color_blue"
-        android:clickable="true"
+        android:backgroundTint="?attr/color_blue"
         android:src="@drawable/icon_add"
-        app:tint="@color/color_white" />
+        app:tint="?attr/color_white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

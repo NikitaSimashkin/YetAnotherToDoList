@@ -8,9 +8,9 @@ import com.example.yetanothertodolist.data.FourZeroFourException
 import com.example.yetanothertodolist.data.FourZeroOneException
 import com.example.yetanothertodolist.data.FourZeroZeroException
 import com.example.yetanothertodolist.di.MainActivityComponentScope
-import com.example.yetanothertodolist.other.ConnectiveLiveData
-import com.example.yetanothertodolist.other.ErrorManager
 import com.example.yetanothertodolist.ui.stateholders.MainActivityViewModel
+import com.example.yetanothertodolist.util.ConnectiveLiveData
+import com.example.yetanothertodolist.util.ErrorManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -125,8 +125,10 @@ class SnackBarErrorManager @Inject constructor(
         if (viewModel.firstLaunch)
             mainActivity.lifecycleScope.launch(Dispatchers.IO) {
                 delay(3000)
-                if (viewModel.firstLaunch)
+                if (viewModel.firstLaunch) {
                     getSnackBarWithoutAction(R.string.noInternet)
+                    viewModel.updateList()
+                }
                 viewModel.firstLaunch = false
             }
     }

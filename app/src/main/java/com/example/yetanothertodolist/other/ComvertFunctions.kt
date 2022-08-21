@@ -1,8 +1,8 @@
 package com.example.yetanothertodolist.Backend
 
-import com.example.yetanothertodolist.ui.view.addFragment.Importance
-import com.example.yetanothertodolist.ui.model.TodoItem
 import com.example.yetanothertodolist.data.model.ServerTodoItem
+import com.example.yetanothertodolist.data.model.TodoItem
+import com.example.yetanothertodolist.ui.view.addFragment.Importance
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -20,7 +20,8 @@ fun ServerTodoItem.toTodoItem(): TodoItem {
         deadline = deadline?.toLocalDateTime(),
         changedAt = changedAt.toLocalDateTime(),
         color = color,
-        lastUpdateBy = lastUpdatedBy
+        lastUpdateBy = lastUpdatedBy,
+        isDeleted = false
     )
 }
 

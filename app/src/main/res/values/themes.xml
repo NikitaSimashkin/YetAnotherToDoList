@@ -1,47 +1,41 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
     <style name="Theme.YetAnotherToDoList" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
+        <item name="android:windowContentTransitions">true</item>
+
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/color_white</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/color_green</item>
+        <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/back_primary</item>
+
+
+        <item name="support_separator">@color/support_separator_light</item>
+        <item name="support_overlay">@color/support_overlay_light</item>
+
+        <item name="label_primary">@color/label_primary_light</item>
+        <item name="label_secondary">@color/label_secondary_light</item>
+        <item name="label_tertiary">@color/label_tertiary_light</item>
+        <item name="label_disable">@color/label_disable_light</item>
+
+        <item name="color_red">@color/color_red_light</item>
+        <item name="color_green">@color/color_green_light</item>
+        <item name="color_blue">@color/color_blue_light</item>
+        <item name="color_gray">@color/color_gray_light</item>
+        <item name="color_gray_light">@color/color_gray_light_light</item>
+        <item name="color_white">@color/color_white_light</item>
+
+        <item name="back_primary">@color/back_primary_light</item>
+        <item name="back_secondary">@color/back_secondary_light</item>
+        <item name="back_elevated">@color/back_elevated_light</item>
+
+        <item name="calendar_color">@color/color_blue_light</item>
+
+        <item name="android:statusBarColor">?attr/back_primary</item>
         <item name="android:windowLightStatusBar">true</item>
-        <!-- Customize your theme here. -->
-    </style>
 
-    <!-- Диалоговое окно календаря -->
-    <style name="Calendar" parent="ThemeOverlay.AppCompat.Dialog">
-        <item name="colorAccent">@color/color_blue</item>
-        <item name="colorControlActivated">@color/color_blue</item>
-        <item name="colorControlHighlight">@color/color_blue</item>
-        <item name="android:buttonBarPositiveButtonStyle">@style/button_for_calendar</item>
-        <item name="android:buttonBarNegativeButtonStyle">@style/button_for_calendar</item>
+        <item name="android:datePickerDialogTheme">@style/DatePickerTheme</item>
     </style>
-
-    <!-- Стиль для кнопки календаря-->
-    <style name="button_for_calendar" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/color_blue</item>
-    </style>
-
-    <!-- Switch -->
-    <style name="MySwitch" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="colorControlActivated">@color/color_blue</item>
-    </style>
-
-    <style name="CollapsedAppBarPlus1" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">24sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="NotCollapsedAppBarPlus1" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">34sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
 </resources>

@@ -3,12 +3,12 @@ package com.example.yetanothertodolist.ui.view.addFragment
 import android.app.DatePickerDialog
 import android.view.View
 import android.widget.AdapterView
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.doOnTextChanged
-import androidx.navigation.findNavController
 import com.example.yetanothertodolist.R
+import com.example.yetanothertodolist.data.model.TodoItem
 import com.example.yetanothertodolist.databinding.AddFragmentBinding
-import com.example.yetanothertodolist.ui.model.TodoItem
-import com.example.yetanothertodolist.ui.stateholders.Action
+import com.example.yetanothertodolist.other.getColor
 import com.example.yetanothertodolist.ui.stateholders.AddFragmentViewModel
 import com.google.android.material.snackbar.Snackbar
 import java.time.LocalDate
@@ -20,17 +20,15 @@ import javax.inject.Inject
 class AddFragmentViewController @Inject constructor(
     private val binding: AddFragmentBinding,
     private val addModel: AddFragmentViewModel,
-    private val adapter: ImportanceAdapter
+    private val adapter: ImportanceAdapter,
+    private val addFragmentOpenCloseController: AddFragmentOpenCloseController
 ) {
-    private var datePicker: DatePickerDialog? = null
+    private lateinit var datePicker: DatePickerDialog
     private val context = binding.close.context
 
-    fun setUpViews(task: Any?) {
-        if (!addModel.valuesAlreadySet) {
-            if (task == null) addModel.setStartValues()
-            else addModel.setItemValues(task as TodoItem)
-            addModel.valuesAlreadySet = true
-        }
+    fun setUpViews(task: TodoItem?) {
+        addModel.setTask(task)
+
         spinnerSetUp()
         calendarSetUp()
         deleteAndCloseButtonSetUp(task)
@@ -78,8 +76,9 @@ class AddFragmentViewController @Inject constructor(
     private fun setModelField() = with(binding) {
         description.setText(addModel.description)
         spinner.setSelection(addModel.importance.ordinal)
-        if (addModel.deadline != null) {
-            dateAddFragment.text = addModel.deadline!!.toLocalDate().toString()
+        val deadline = addModel.deadline
+        if (deadline != null) {
+            dateAddFragment.text = deadline.toLocalDate().toString()
             calendarSwitch.isChecked = true
         } else {
             dateAddFragment.text = ""
@@ -102,27 +101,27 @@ class AddFragmentViewController @Inject constructor(
     }
 
     private fun showDatePicker() {
-        if (datePicker == null)
+        if (!::datePicker.isInitialized)
             createDatePicker()
-        datePicker!!.show()
+        datePicker.show()
     }
 
     private fun createDatePicker() {
-        datePicker = DatePickerDialog(context, R.style.Calendar)
-        datePicker!!.setButton(
+        datePicker = DatePickerDialog(context)
+        datePicker.setButton(
             DatePickerDialog.BUTTON_POSITIVE,
             context.getText(R.string.ready),
             datePicker
         )
-        datePicker!!.setButton(
+        datePicker.setButton(
             DatePickerDialog.BUTTON_NEGATIVE,
             context.getText(R.string.cancel),
             datePicker
         )
-        datePicker!!.setOnDateSetListener { _, year, month, dayOfMonth ->
+        datePicker.setOnDateSetListener { _, year, month, dayOfMonth ->
             binding.dateAddFragment.text = LocalDate.of(year, month, dayOfMonth).toString()
         }
-        datePicker!!.setOnCancelListener {
+        datePicker.setOnCancelListener {
             if (binding.dateAddFragment.text.isEmpty()) binding.calendarSwitch.isChecked = false
         }
     }
@@ -135,7 +134,7 @@ class AddFragmentViewController @Inject constructor(
         binding.calendarSwitch.isChecked = !binding.calendarSwitch.isChecked
     }
 
-    private fun saveButtonSetUp(task: Any?) {
+    private fun saveButtonSetUp(task: TodoItem?) {
         binding.save.setOnClickListener {
             binding.save.isClickable = false
             if (binding.description.text.trim().isEmpty()) {
@@ -145,27 +144,28 @@ class AddFragmentViewController @Inject constructor(
                 when (task) {
                     null -> addTask()
                     else -> {
-                        val newTask = addModel.getItem()
-                        updateTask(newTask)
+                        updateTask()
                     }
                 }
             }
         }
     }
 
-    private fun deleteAndCloseButtonSetUp(task: Any?) {
+    private fun deleteAndCloseButtonSetUp(task: TodoItem?) = with(binding) {
         if (task != null) {
-            binding.delete.setOnClickListener {
-                binding.delete.isClickable = false
-                deleteTask(task as TodoItem)
+            delete.setOnClickListener {
+                delete.isClickable = false
+                deleteTask(task)
             }
         } else {
-            val color = context.getColor(R.color.label_disable)
-            binding.deleteText.setTextColor(color)
-            binding.deleteIcon.setColorFilter(color)
+            deleteText.setTextColor(getColor(context, R.attr.label_disable))
+            DrawableCompat.setTint(deleteIcon.drawable, getColor(context, R.attr.label_disable))
         }
 
-        binding.close.setOnClickListener { closeFragment() }
+        binding.close.setOnClickListener {
+            addFragmentOpenCloseController.closeButton(binding)
+            addModel.clear()
+        }
     }
 
     private fun spinnerSetUp() {
@@ -175,23 +175,16 @@ class AddFragmentViewController @Inject constructor(
         }
     }
 
-    private fun updateTask(item: TodoItem) {
-        addModel.callToRepository(Action.Update, item)
-        closeFragment()
+    private fun updateTask() {
+        addFragmentOpenCloseController.saveButton(addModel.updateItem(), binding)
     }
 
     private fun deleteTask(item: TodoItem) {
-        addModel.callToRepository(Action.Delete, item)
-        closeFragment()
+        addModel.deleteItem(item)
+        addFragmentOpenCloseController.deleteButton(binding)
     }
 
     private fun addTask() {
-        addModel.callToRepository(Action.Add, addModel.getItem(true))
-        closeFragment()
-    }
-
-    private fun closeFragment() {
-        addModel.valuesAlreadySet = false
-        binding.close.findNavController().popBackStack()
+        addFragmentOpenCloseController.saveButton(addModel.addItem(), binding)
     }
 }

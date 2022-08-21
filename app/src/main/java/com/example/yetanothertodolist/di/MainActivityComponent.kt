@@ -1,11 +1,12 @@
 package com.example.yetanothertodolist.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.activity.viewModels
-import com.example.yetanothertodolist.other.ErrorManager
 import com.example.yetanothertodolist.ui.stateholders.MainActivityViewModel
 import com.example.yetanothertodolist.ui.view.MainActivity.MainActivity
 import com.example.yetanothertodolist.ui.view.MainActivity.SnackBarErrorManager
+import com.example.yetanothertodolist.util.ErrorManager
 import dagger.*
 import javax.inject.Scope
 
@@ -23,6 +24,7 @@ interface MainActivityComponent {
 
     fun listFragmentComponent(): ListFragmentComponent.Factory
     fun addFragmentComponent(): AddFragmentComponent.Factory
+    fun sharedPreference(): SharedPreferences
 
     fun errorManager(): SnackBarErrorManager
 }

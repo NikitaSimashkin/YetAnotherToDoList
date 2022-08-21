@@ -1,14 +1,17 @@
 package com.example.yetanothertodolist.ui.view.addFragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.yetanothertodolist.R
+import com.example.yetanothertodolist.data.model.TodoItem
 import com.example.yetanothertodolist.databinding.AddFragmentBinding
 import com.example.yetanothertodolist.di.AddFragmentComponent
 import com.example.yetanothertodolist.di.AddFragmentComponentView
+import com.example.yetanothertodolist.other.ConstValues
 import com.example.yetanothertodolist.ui.view.MainActivity.MainActivity
-import com.example.yetanothertodolist.ui.view.listFragment.ListFragmentViewController
 
 /**
  * Фрагмент, на котором добавляются или редактируются задания
@@ -26,14 +29,22 @@ class AddFragment : Fragment(R.layout.add_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = AddFragmentBinding.bind(view)
 
-        val task: Any? =
-            requireArguments().get(ListFragmentViewController.TASK_TAG) // редактируемое задание
-        addFragmentComponentView = addFragmentComponent.addFragmentComponentView().create(binding)
-        addFragmentComponentView!!.addFragmentViewController.setUpViews(task)
+        val task: TodoItem? =
+            requireArguments().get(ConstValues.TASK_TAG) as TodoItem? // редактируемое задание
+
+        addFragmentComponentView = addFragmentComponent.addFragmentComponentView()
+            .create(binding).apply {
+                addFragmentViewController.setUpViews(task)
+            }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+        if (view != null)
+            addFragmentComponent.addFragmentOpenCloseController().startAnimation(requireArguments(), view)
+        return view
     }
 
     override fun onDestroyView() {
