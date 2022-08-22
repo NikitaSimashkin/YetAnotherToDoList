@@ -44,7 +44,10 @@ class ListMerger @Inject constructor(private val sharedPreferences: SharedPrefer
     }
 
     private suspend fun checkDeletedItem() {
-        val copy = serverMap.clone() as LinkedHashMap<String, TodoItem>
+        val copy = LinkedHashMap<String, TodoItem>()
+        for (i in serverMap.entries){
+            copy[i.key] = i.value
+        }
         serverMap.values.forEach {
             if (databaseMap.containsKey(it.id)) {
                 val bdItem = databaseMap[it.id]!!

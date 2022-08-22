@@ -27,7 +27,8 @@ class ViewModelFactory @Inject constructor(
             repository, connectiveLiveData
         )
         MainActivityViewModel::class.java -> MainActivityViewModel(
-            repository
+            repository,
+            connectiveLiveData
         )
         else -> throw IllegalArgumentException("${modelClass.simpleName} cannot be provided.")
     } as T

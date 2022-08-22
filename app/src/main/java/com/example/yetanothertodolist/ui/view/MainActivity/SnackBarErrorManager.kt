@@ -13,7 +13,6 @@ import com.example.yetanothertodolist.util.ConnectiveLiveData
 import com.example.yetanothertodolist.util.ErrorManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
@@ -92,46 +91,14 @@ class SnackBarErrorManager @Inject constructor(
 
     private fun setInternetChangeListener() {
         connectiveLiveData.observe(mainActivity) {
-            if (it) {
-                internetTrue()
-            } else {
-                internetFalse()
+            if (it != viewModel.isConnectedForSnackBarErrorManager) {
+                if (it) {
+                    getSnackBarWithoutAction(R.string.yesInternet)
+                } else {
+                    getSnackBarWithoutAction(R.string.noInternet)
+                }
+                viewModel.isConnectedForSnackBarErrorManager = it
             }
         }
-        startNoInternetSnackBar()
     }
-
-    private fun internetFalse() {
-        if (viewModel.isConnected)
-            getSnackBarWithoutAction(R.string.noInternet)
-        viewModel.isConnected = false
-    }
-
-    private fun internetTrue() {
-        if (!viewModel.firstLaunch && !viewModel.isConnected)
-            getSnackBarWithoutAction(R.string.yesInternet)
-        else
-            viewModel.firstLaunch = false
-
-        viewModel.hasConnection()
-        viewModel.isConnected = true
-    }
-
-    /**
-     * Этот метод только для ситуации, когда пользователь запустил приложение без интернета
-     * Без этого метода пользователь не узнает, что у него данные не сохраняются на сервер
-     */
-    private fun startNoInternetSnackBar() {
-        if (viewModel.firstLaunch)
-            mainActivity.lifecycleScope.launch(Dispatchers.IO) {
-                delay(3000)
-                if (viewModel.firstLaunch) {
-                    getSnackBarWithoutAction(R.string.noInternet)
-                    viewModel.updateList()
-                }
-                viewModel.firstLaunch = false
-            }
-    }
-
-
 }

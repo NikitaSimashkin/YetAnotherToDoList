@@ -22,7 +22,6 @@ class ConnectiveLiveData @Inject constructor(context: Application): LiveData<Boo
 
     override fun onActive() {
         callback = getCallback()
-
         val networkRequest = NetworkRequest.Builder().addCapability(NET_CAPABILITY_INTERNET).build()
         cm.registerNetworkCallback(networkRequest, callback)
     }
@@ -32,13 +31,23 @@ class ConnectiveLiveData @Inject constructor(context: Application): LiveData<Boo
             val networkCapabilities = cm.getNetworkCapabilities(network)
             if (networkCapabilities?.hasCapability(NET_CAPABILITY_INTERNET) == true) {
                 networks.add(network)
+                check()
             }
-            postValue(networks.size > 0)
         }
 
         override fun onLost(network: Network) {
-            postValue(false)
+            networks.remove(network)
+            check()
         }
+    }
+
+    private var last = false
+    private fun check(){
+        if (networks.size > 0 != last){
+            postValue(networks.size > 0)
+            last = networks.size > 0
+        }
+
     }
 
     override fun onInactive() {

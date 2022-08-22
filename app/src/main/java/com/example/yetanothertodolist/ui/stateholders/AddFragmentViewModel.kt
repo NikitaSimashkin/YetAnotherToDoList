@@ -41,7 +41,7 @@ class AddFragmentViewModel(
     var isDeleted = false
 
     private val observer: Observer<Boolean> =
-        Observer<Boolean> { value -> isConnected = value; println(isConnected) }
+        Observer<Boolean> { value -> isConnected = value}
     private var isConnected: Boolean = connectiveLiveData.value ?: false
 
     init {

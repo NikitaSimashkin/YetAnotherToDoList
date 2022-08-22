@@ -71,7 +71,7 @@ class TodoItemRepository @Inject constructor(
     suspend fun updateList() {
         val newList = listMerger.merge(serverGetList(), dataBaseGetList())
         setDataBaseList(newList)
-        errorManager?.launchWithHandler { serverUpdateList(newList) }
+        try {serverUpdateList(newList)} catch (ignored: Exception) {}
         setNewList(newList.filter{!it.isDeleted})
     }
 

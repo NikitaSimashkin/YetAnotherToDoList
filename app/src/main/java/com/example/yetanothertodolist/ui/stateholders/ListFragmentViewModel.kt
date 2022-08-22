@@ -26,8 +26,6 @@ class ListFragmentViewModel(private val repository: TodoItemRepository) : ViewMo
             isDeleted = false
         )) }
     }
-
-
     private val _eyeButton = MutableLiveData(true)
     val eyeButton: LiveData<Boolean> = _eyeButton
 
