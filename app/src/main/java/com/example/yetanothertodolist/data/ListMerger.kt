@@ -14,7 +14,7 @@ class ListMerger @Inject constructor(private val sharedPreferences: SharedPrefer
     private var databaseMap: LinkedHashMap<String, TodoItem> = LinkedHashMap()
     private lateinit var lastSynchronizeTime: LocalDateTime
 
-    suspend fun merge(serverList: List<TodoItem>?, dataBaseList: List<TodoItem>?): List<TodoItem> {
+    fun merge(serverList: List<TodoItem>?, dataBaseList: List<TodoItem>?): List<TodoItem> {
         val tmpString = sharedPreferences.getString(ConstValues.LAST_SYNCHRONIZE_TIME, "")!!
         lastSynchronizeTime = if (tmpString.isEmpty())
             LocalDateTime.now()
@@ -43,7 +43,7 @@ class ListMerger @Inject constructor(private val sharedPreferences: SharedPrefer
         }
     }
 
-    private suspend fun checkDeletedItem() {
+    private fun checkDeletedItem() {
         val copy = LinkedHashMap<String, TodoItem>()
         for (i in serverMap.entries){
             copy[i.key] = i.value

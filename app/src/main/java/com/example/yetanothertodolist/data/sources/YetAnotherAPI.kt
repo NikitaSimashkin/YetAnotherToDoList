@@ -20,11 +20,6 @@ interface YetAnotherAPI {
         @Body list: ServerList
     ): Response<ServerList>
 
-
-    @GET("list/{id}")
-    suspend fun getElement(@Path("id") id: String): Response<ServerOneElement>
-
-
     @POST("list")
     suspend fun addElement(
         @Header("X-Last-Known-Revision") number: Long,

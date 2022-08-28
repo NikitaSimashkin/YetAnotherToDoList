@@ -3,6 +3,7 @@ package com.example.yetanothertodolist.ui.view.listFragment
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.animations.BoxOfAnimations
@@ -10,6 +11,9 @@ import com.example.yetanothertodolist.databinding.ListFragmentBinding
 import com.example.yetanothertodolist.di.ListFragmentComponentViewScope
 import com.example.yetanothertodolist.other.getColor
 import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
+import com.example.yetanothertodolist.ui.view.listFragment.recycler.SwipeController
+import com.example.yetanothertodolist.ui.view.listFragment.recycler.TodoAdapter
+import com.example.yetanothertodolist.ui.view.listFragment.recycler.TodoAdapterDiffUtil
 import com.google.android.material.appbar.AppBarLayout
 import javax.inject.Inject
 
@@ -23,7 +27,8 @@ class ListFragmentViewController @Inject constructor(
     private val adapter: TodoAdapter,
     private val lifecycleOwner: LifecycleOwner,
     private val listFragmentOpenCloseController: ListFragmentOpenCloseController,
-    private val themeSelector: ThemeSelector
+    private val themeSelector: ThemeSelector,
+    private val swipeController: SwipeController
 ) {
     private val context = binding.recyclerView.context
 
@@ -32,6 +37,11 @@ class ListFragmentViewController @Inject constructor(
         setFloatingButton()
         setEyeButton()
         setSettingsButton()
+        setRecyclerView()
+    }
+
+    private fun setRecyclerView() {
+        ItemTouchHelper(swipeController.getSwipeCallback()).attachToRecyclerView(binding.recyclerView)
     }
 
     private fun setSettingsButton() {

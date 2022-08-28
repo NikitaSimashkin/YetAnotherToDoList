@@ -7,13 +7,12 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\nikit\.android\avd\Pixel_5_API_30_1.avd" />
+            <value value="C:\Users\nikit\.android\avd\Nexus_6_API_30.avd" />
           </Key>
         </deviceKey>
       </Target>
     </runningDeviceTargetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-08-22T12:46:42.578442400Z" />
-    <multipleDevicesSelectedInDropDown value="true" />
+    <timeTargetWasSelectedWithDropDown value="2022-08-28T21:22:56.884435500Z" />
     <runningDeviceTargetsSelectedWithDialog>
       <Target>
         <type value="RUNNING_DEVICE_TARGET" />

@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.example.yetanothertodolist.YetAnotherApplication
+import com.example.yetanothertodolist.data.ServerConst
 import com.example.yetanothertodolist.data.repository.TodoItemRepository
 import com.example.yetanothertodolist.data.room.TaskDatabase
 import com.example.yetanothertodolist.data.room.TasksDao
@@ -77,11 +79,12 @@ object ApplicationModule {
     @Provides
     @ApplicationScope
     fun yetAnotherAPI(
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
+        application: Application
     ): YetAnotherAPI {
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://beta.mrdekk.ru/todobackend/")
+            .baseUrl((application as YetAnotherApplication).url)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -118,7 +121,7 @@ object ApplicationModule {
 
     @Provides
     @Token
-    fun token(): String = "ShandalarRokas"
+    fun token(): String = ServerConst.token
 
     @Qualifier
     annotation class Token

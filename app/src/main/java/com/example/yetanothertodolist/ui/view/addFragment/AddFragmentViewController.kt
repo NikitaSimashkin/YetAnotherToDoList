@@ -24,7 +24,8 @@ class AddFragmentViewController @Inject constructor(
     private val addFragmentOpenCloseController: AddFragmentOpenCloseController
 ) {
     private lateinit var datePicker: DatePickerDialog
-    private val context = binding.close.context
+    private val context
+        get() = binding.close.context
 
     fun setUpViews(task: TodoItem?) {
         addModel.setTask(task)

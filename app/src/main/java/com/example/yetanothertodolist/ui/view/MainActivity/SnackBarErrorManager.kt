@@ -65,7 +65,7 @@ class SnackBarErrorManager @Inject constructor(
             } catch (e: Exception) {
                 when (e) {
                     is FourZeroOneException, is FiveZeroZeroException -> authError(action!!)
-                    is FourZeroFourException, is FourZeroZeroException -> notFoundError(action!!)
+                    is FourZeroFourException, is FourZeroZeroException -> notFoundError()
                     is UnknownHostException -> {
                         /**
                          * Ели нет интернета, нужно просто показать снекбар, этим занимается
@@ -81,7 +81,7 @@ class SnackBarErrorManager @Inject constructor(
         getSnackBarWithoutAction(R.string.unknownError)
     }
 
-    private fun notFoundError(action: suspend () -> Unit) {
+    private fun notFoundError() {
         viewModel.updateList()
     }
 

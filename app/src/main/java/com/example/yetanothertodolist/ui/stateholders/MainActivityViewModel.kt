@@ -41,8 +41,6 @@ class MainActivityViewModel(
 
     var isConnectedForSnackBarErrorManager = false
 
-    var firstLaunch = true
-
     fun updateList() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateList()

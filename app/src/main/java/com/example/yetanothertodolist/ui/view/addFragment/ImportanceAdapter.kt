@@ -5,11 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import com.example.yetanothertodolist.other.getColor
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.di.AddFragmentComponentScope
 import com.example.yetanothertodolist.di.ResImportanceAdapter
 import com.example.yetanothertodolist.di.TextviewImportanceAdapter
-import com.example.yetanothertodolist.other.getColor
 import javax.inject.Inject
 
 /**
