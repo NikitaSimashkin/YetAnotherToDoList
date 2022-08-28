@@ -15,13 +15,13 @@ import javax.inject.Inject
 class ThemeSelector @Inject constructor(
     private val sharedPreference: SharedPreferences,
     context: Context,
-    listFragment: ListFragment
+    private val listFragmentOpenCloseController: ListFragmentOpenCloseController
 ) {
     private var dialog: Dialog? = null
     private lateinit var binding: ChangeThemeDialogBinding
 
-    init{
-        createDialog(context, listFragment)
+    init {
+        createDialog(context)
         setButtons()
     }
 
@@ -29,7 +29,7 @@ class ThemeSelector @Inject constructor(
         dialog!!.show()
     }
 
-    private fun createDialog(context: Context, listFragment: ListFragment) {
+    private fun createDialog(context: Context) {
         dialog = Dialog(context)
         binding = ChangeThemeDialogBinding.bind(
             dialog!!.layoutInflater.inflate(
@@ -42,20 +42,36 @@ class ThemeSelector @Inject constructor(
 
     private fun setButtons() {
         binding.systemLayout.setOnClickListener {
-            sharedPreference.edit { putString(ConstValues.START_THEME, "system") }
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            dialog!!.dismiss()
+            changeTheme(Theme.System)
         }
         binding.darkLayout.setOnClickListener {
-            sharedPreference.edit { putString(ConstValues.START_THEME, "dark") }
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            dialog!!.dismiss()
+            changeTheme(Theme.Dark)
         }
         binding.lightLayout.setOnClickListener {
-            sharedPreference.edit { putString(ConstValues.START_THEME, "light") }
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            dialog!!.dismiss()
+            changeTheme(Theme.Light)
         }
     }
 
+    private fun changeTheme(theme: Theme) {
+        val mode = when (theme) {
+            Theme.System -> {
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
+            Theme.Light -> {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+            Theme.Dark -> {
+                AppCompatDelegate.MODE_NIGHT_YES
+            }
+        }
+        sharedPreference.edit { putString(ConstValues.START_THEME, theme.toString().lowercase()) }
+        listFragmentOpenCloseController.saveScrollPosition()
+        AppCompatDelegate.setDefaultNightMode(mode)
+        dialog!!.dismiss()
+    }
+
+}
+
+enum class Theme {
+    Light, Dark, System
 }

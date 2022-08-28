@@ -1,4 +1,4 @@
-package com.example.yetanothertodolist.ui.view.listFragment
+package com.example.yetanothertodolist.ui.view.listFragment.recycler
 
 import android.content.res.ColorStateList
 import android.graphics.Paint
@@ -10,6 +10,7 @@ import com.example.yetanothertodolist.databinding.TodoItemBinding
 import com.example.yetanothertodolist.other.getColor
 import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
 import com.example.yetanothertodolist.ui.view.addFragment.Importance
+import com.example.yetanothertodolist.ui.view.listFragment.ListFragmentOpenCloseController
 
 /**
  * ViewHolder для TodoAdapter, отображает одно задание
@@ -21,19 +22,21 @@ class TaskHolder(
 ) :
     RecyclerView.ViewHolder(itemView) {
     private var binding: TodoItemBinding = TodoItemBinding.bind(itemView)
+    private lateinit var currentItem: TodoItem
 
-    fun bind(itemCopy: TodoItem) = with(binding) {
-        textViewTask.transitionName = itemCopy.id
+    fun bind(item: TodoItem) = with(binding) {
+        textViewTask.transitionName = item.id
+        currentItem = item
 
-        setDescription(itemCopy)
+        setDescription(item)
 
-        setCheckBox(itemCopy)
+        setCheckBox(item)
 
-        setClickListenersToOpenAddFragment(itemCopy)
+        setClickListenersToOpenAddFragment(item)
 
-        setImportance(itemCopy)
+        setImportance(item)
 
-        setDate(itemCopy)
+        setDate(item)
     }
 
     private fun setDate(data: TodoItem) {
@@ -69,6 +72,8 @@ class TaskHolder(
             changeTextStyle()
         }
     }
+
+    fun getItem() = currentItem
 
     private fun setDescription(data: TodoItem) = with(binding) {
         textViewTask.text = data.description

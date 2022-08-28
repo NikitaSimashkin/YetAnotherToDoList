@@ -68,10 +68,10 @@ class TodoItemRepository @Inject constructor(
     }
 
 
-    suspend fun updateList() {
+    suspend fun updateList() = mutex.withLock {
         val newList = listMerger.merge(serverGetList(), dataBaseGetList())
         setDataBaseList(newList)
-        try {serverUpdateList(newList)} catch (ignored: Exception) {}
+        errorManager?.launchWithHandler{serverUpdateList(newList)}
         setNewList(newList.filter{!it.isDeleted})
     }
 
@@ -81,16 +81,20 @@ class TodoItemRepository @Inject constructor(
         dataBaseSource.addAll(list)
     }
 
-    private suspend fun dataBaseGetList(): List<TodoItem>? {
+    private fun dataBaseGetList(): List<TodoItem>? {
         return dataBaseSource.getTask()
     }
 
+    // я здесь игнорирую ошибку не потому что не хочу ее обрабатывать, а потому что ее не нужно обрабатывать
+    // единственное что тут может произойти - отсутствие интернета, но это и так обработается
     private suspend fun serverGetList(): List<TodoItem>? {
-        var newList: List<TodoItem>? = null
+
+        val newList: List<TodoItem>?
         try {
             newList = serverSource.getList()
-        } catch(ignored: Exception){}
-
+        } catch(e: Exception){
+            return null
+        }
         return newList
     }
 
@@ -101,21 +105,6 @@ class TodoItemRepository @Inject constructor(
     private suspend fun serverAdd(item: TodoItem) = serverSource.addItem(item)
 
     private suspend fun serverRemove(item: TodoItem) = serverSource.deleteItem(item.id)
-
-
-    // Только для WorkManager
-    suspend fun serverGetListWithoutErrorManager() {
-        val newList = try {
-            serverSource.getList()
-        } catch (e: Exception) {
-            null
-        }
-        if (newList != null) {
-            dataBaseSource.deleteAll(_tasks.value!!)
-            setNewList(newList)
-            dataBaseSource.addAll(newList)
-        }
-    }
 
     private suspend fun setNewList(newList: List<TodoItem>) {
         withContext(Dispatchers.Main) { _tasks.value = newList }

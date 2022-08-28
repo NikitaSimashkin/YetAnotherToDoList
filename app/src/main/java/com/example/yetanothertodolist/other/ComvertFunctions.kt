@@ -6,10 +6,6 @@ import com.example.yetanothertodolist.ui.view.addFragment.Importance
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-/**
- * Функции для преобразования одного объекта в другой
- * В джаве я бы сделал отдельный класс со static методами, но котлин позволяет упростить это
- */
 fun ServerTodoItem.toTodoItem(): TodoItem {
     return TodoItem(
         id = id,

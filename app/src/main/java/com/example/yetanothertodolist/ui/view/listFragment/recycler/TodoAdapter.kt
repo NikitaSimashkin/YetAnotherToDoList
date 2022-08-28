@@ -1,4 +1,4 @@
-package com.example.yetanothertodolist.ui.view.listFragment
+package com.example.yetanothertodolist.ui.view.listFragment.recycler
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.di.ListFragmentComponentScope
 import com.example.yetanothertodolist.other.getColor
 import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
+import com.example.yetanothertodolist.ui.view.listFragment.ListFragmentOpenCloseController
 import javax.inject.Inject
 
 /**

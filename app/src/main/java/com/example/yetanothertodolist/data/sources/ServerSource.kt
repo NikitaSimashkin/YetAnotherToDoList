@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 
 /**
- * Класс для получения информации
+ * Класс для получения информации с сервера
  */
 @ApplicationScope
 class ServerSource @Inject constructor(
@@ -28,10 +28,9 @@ class ServerSource @Inject constructor(
 
     private var lastRevision = sharedPreferences.getLong(ConstValues.LAST_REVISION_DB, 0)
 
-    suspend fun getList(): List<TodoItem> {
+    suspend fun getList(): List<TodoItem>? {
         val answer = api.getList()
-        val newList = answer.body()!!.list.map { it.toTodoItem() }
-
+        val newList = answer.body()?.list?.map { it.toTodoItem() }
         checkError(answer.code())
         updateRevision(answer.body()!!.revision!!)
         return newList
@@ -50,15 +49,6 @@ class ServerSource @Inject constructor(
         return answer.body()!!.list.map { it.toTodoItem() }
     }
 
-    suspend fun getItem(id: String): TodoItem {
-        val answer = api.getElement(id)
-
-        checkError(answer.code())
-        updateLastSync()
-        updateRevision(answer.body()!!.revision!!)
-        return answer.body()!!.element.toTodoItem()
-    }
-
     suspend fun addItem(item: TodoItem) {
         val answer = api.addElement(
             lastRevision, ServerOneElement(
@@ -66,6 +56,14 @@ class ServerSource @Inject constructor(
                 item.toServerTodoItem()
             )
         )
+
+        checkError(answer.code())
+        updateLastSync()
+        answer.body()?.revision?.let { updateRevision(it) }
+    }
+
+    suspend fun deleteItem(id: String) {
+        val answer = api.deleteElement(lastRevision, id)
 
         checkError(answer.code())
         updateLastSync()
@@ -87,14 +85,6 @@ class ServerSource @Inject constructor(
         updateRevision(answer.body()!!.revision!!)
     }
 
-    suspend fun deleteItem(id: String) {
-        val answer = api.deleteElement(lastRevision, id)
-
-        checkError(answer.code())
-        updateLastSync()
-        updateRevision(answer.body()!!.revision!!)
-    }
-
     private fun updateRevision(newRevision: Long) {
         lastRevision = newRevision
         sharedPreferences.edit {
@@ -108,7 +98,7 @@ class ServerSource @Inject constructor(
         }
     }
 
-    private suspend fun checkError(code: Int) {
+    private fun checkError(code: Int) {
         when (code) {
             400 -> throw FourZeroZeroException()
             401 -> throw FourZeroOneException()

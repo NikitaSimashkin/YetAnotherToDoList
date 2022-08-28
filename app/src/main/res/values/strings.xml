@@ -21,6 +21,7 @@
     <string name="light_theme">Светлая\nтема</string>
     <string name="dark_theme">Темная\nтема</string>
     <string name="system_theme">Систем.\nтема</string>
+    <string name="low">Низкая</string>
 
     <string-array name="importance">
         <item>Низкая</item>

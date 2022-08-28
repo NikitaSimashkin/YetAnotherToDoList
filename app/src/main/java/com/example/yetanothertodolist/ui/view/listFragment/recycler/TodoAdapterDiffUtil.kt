@@ -1,4 +1,4 @@
-package com.example.yetanothertodolist.ui.view.listFragment
+package com.example.yetanothertodolist.ui.view.listFragment.recycler
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.yetanothertodolist.data.model.TodoItem

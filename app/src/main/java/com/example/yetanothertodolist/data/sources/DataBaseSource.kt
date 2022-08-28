@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 
 class DataBaseSource @Inject constructor(
-    val dao: TasksDao
+    private val dao: TasksDao
 ) {
 
     suspend fun updateItem(item: TodoItem){
@@ -25,15 +25,11 @@ class DataBaseSource @Inject constructor(
         dao.deleteTask(item)
     }
 
-    suspend fun deleteAll(list: List<TodoItem>){
-        dao.deleteAllTasks(list)
-    }
-
-    suspend fun deleteAll(){
+    fun deleteAll(){
         dao.deleteAll()
     }
 
-    suspend fun getTask(): List<TodoItem>?{
+    fun getTask(): List<TodoItem>?{
         return dao.getTasks()
     }
 }

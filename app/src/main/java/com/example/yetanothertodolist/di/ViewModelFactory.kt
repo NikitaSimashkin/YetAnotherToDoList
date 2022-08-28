@@ -21,7 +21,8 @@ class ViewModelFactory @Inject constructor(
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T = when (modelClass) {
         ListFragmentViewModel::class.java -> ListFragmentViewModel(
-            repository
+            repository,
+            connectiveLiveData
         )
         AddFragmentViewModel::class.java -> AddFragmentViewModel(
             repository, connectiveLiveData

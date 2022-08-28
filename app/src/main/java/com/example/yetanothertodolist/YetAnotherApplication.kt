@@ -9,7 +9,7 @@ import java.util.*
 /**
  * Класс приложения, создан лишь для хранения компонента
  */
-class YetAnotherApplication : Application() {
+open class YetAnotherApplication : Application() {
 
     lateinit var applicationComponent: ApplicationComponent
 
@@ -18,11 +18,14 @@ class YetAnotherApplication : Application() {
             private set
     }
 
+    open val url = "https://beta.mrdekk.ru/todobackend/"
+
     override fun onCreate() {
         super.onCreate()
         applicationComponent = DaggerApplicationComponent.factory().create(this)
         initWorker()
         setDeviceId()
+
     }
 
     private fun setDeviceId() {

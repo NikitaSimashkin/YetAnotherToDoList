@@ -34,7 +34,7 @@ class ListFragmentOpenCloseController @Inject constructor(
         )
     }
 
-    private fun saveScrollPosition() {
+    fun saveScrollPosition() {
         val view = fragment.requireView()
         viewModel.scrollPosition = view.findViewById<NestedScrollView>(R.id.scroll).scrollY
         viewModel.appBarOffset =
