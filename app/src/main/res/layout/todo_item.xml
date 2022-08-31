@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_to_do_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:minHeight="48dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:importantForAccessibility="yes">
 
     <FrameLayout
         android:id="@+id/checkboxlayout"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:importantForAccessibility="no">
 
         <CheckBox
             android:id="@+id/checkBoxTask"
@@ -23,45 +24,38 @@
             android:layout_height="match_parent"
             android:layout_gravity="top"
             android:checked="false"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:contentDescription="@string/done"/>
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/imagebuttontasklayout"
-        android:layout_width="wrap_content"
+    <ImageButton
+        android:id="@+id/imageButtonTask"
+        android:layout_width="48dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/checkboxlayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/todoItemLayout"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_gravity="center|center_horizontal"
+        android:background="@null"
+        android:scaleType="centerInside"
+        app:srcCompat="@android:drawable/ic_menu_info_details"
+        app:tint="?attr/label_tertiary"
+        android:importantForAccessibility="no">
 
-        <ImageButton
-            android:id="@+id/imageButtonTask"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center|center_horizontal"
-            android:background="@null"
-            android:clickable="false"
-            android:scaleType="centerInside"
-            app:srcCompat="@android:drawable/ic_menu_info_details"
-            app:tint="?attr/label_tertiary" />
-    </FrameLayout>
+    </ImageButton>
 
-    <FrameLayout
-        android:id="@+id/iconlayout"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon_importance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/checkboxlayout"
         app:layout_constraintEnd_toStartOf="@+id/todoItemLayout"
         app:layout_constraintStart_toEndOf="@+id/checkboxlayout"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_gravity="center">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/icon_importance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
+    </androidx.appcompat.widget.AppCompatImageView>
 
     <LinearLayout
         android:id="@+id/todoItemLayout"
@@ -70,8 +64,8 @@
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingEnd="10dp"
-        app:layout_constraintEnd_toStartOf="@+id/imagebuttontasklayout"
-        app:layout_constraintStart_toEndOf="@id/iconlayout"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonTask"
+        app:layout_constraintStart_toEndOf="@id/icon_importance"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -86,30 +80,24 @@
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
             android:textColor="?attr/label_primary"
-            android:textAppearance="@style/TextAppearance.Body" />
+            android:textAppearance="@style/TextAppearance.Body"
+            android:importantForAccessibility="no"/>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/datelayout"
+    <TextView
+        android:id="@+id/date_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
-        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/checkboxlayout"
-        app:layout_constraintTop_toBottomOf="@+id/todoItemLayout">
-
-        <TextView
-            android:id="@+id/date_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="top"
-            android:includeFontPadding="false"
-            android:textColor="?attr/color_blue"
-            android:textAppearance="@style/TextAppearance.Subhead" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/todoItemLayout"
+        android:gravity="top"
+        android:includeFontPadding="false"
+        android:textColor="?attr/color_blue"
+        android:textAppearance="@style/TextAppearance.Subhead">
+    </TextView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

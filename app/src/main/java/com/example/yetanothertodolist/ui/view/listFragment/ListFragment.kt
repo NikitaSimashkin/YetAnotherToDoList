@@ -12,6 +12,7 @@ import com.example.yetanothertodolist.di.ListFragmentComponent
 import com.example.yetanothertodolist.di.ListFragmentComponentView
 import com.example.yetanothertodolist.other.ConstValues
 import com.example.yetanothertodolist.ui.view.MainActivity.MainActivity
+import com.google.android.material.appbar.CollapsingToolbarLayout
 
 /**
  * Фрагмент, на котором отображается список заданий
@@ -28,6 +29,7 @@ class ListFragment : Fragment(R.layout.list_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = ListFragmentBinding.bind(view)
+
         postponeEnterTransition()
         (view.parent as? View)?.doOnPreDraw {
             listFragmentViewComponent!!.listFragmentViewController().setUpScrolls()
@@ -36,7 +38,6 @@ class ListFragment : Fragment(R.layout.list_fragment) {
         listFragmentViewComponent =
             listFragmentComponent.listFragmentComponentView().create(binding)
         listFragmentViewComponent!!.listFragmentViewController().setUpView()
-
     }
 
     override fun onCreateView(
@@ -50,6 +51,9 @@ class ListFragment : Fragment(R.layout.list_fragment) {
         if (view != null && id != null) {
             listFragmentComponent.listFragmentOpenCloseController().startAnimation()
         }
+        val collapsingToolbarLayout = view?.findViewById<CollapsingToolbarLayout>(R.id.collapsingtoolbar)
+        collapsingToolbarLayout?.isFocusableInTouchMode = true
+        collapsingToolbarLayout?.requestFocus()
 
         return view
     }

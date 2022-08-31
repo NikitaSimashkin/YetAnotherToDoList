@@ -4,17 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/add_fragment_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:importantForAccessibility="no">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/back_primary">
+        android:background="?attr/back_primary"
+        android:importantForAccessibility="no">
 
         <FrameLayout
             android:id="@+id/actionbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no">
 
             <ImageButton
                 android:id="@+id/close"
@@ -24,7 +27,8 @@
                 android:background="@null"
                 android:padding="5dp"
                 android:src="@android:drawable/ic_menu_close_clear_cancel"
-                app:tint="?attr/label_primary" />
+                app:tint="?attr/label_primary"
+                android:contentDescription="@string/close"/>
 
             <TextView
                 android:id="@+id/save"
@@ -35,7 +39,8 @@
                 android:gravity="center"
                 android:text="@string/save"
                 android:textAppearance="@style/TextAppearance.Button"
-                android:textColor="?attr/color_blue" />
+                android:textColor="?attr/color_blue"
+                android:contentDescription="@string/save"/>
 
         </FrameLayout>
 
@@ -46,14 +51,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/back_primary"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:importantForAccessibility="no">
 
         <LinearLayout
             android:id="@+id/root_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:importantForAccessibility="no">
 
             <EditText
                 android:id="@+id/description"
@@ -87,6 +94,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="28dp"
                     android:text="@string/importance"
+                    android:importantForAccessibility="no"
                     android:textColor="?attr/label_primary"
                     android:textAppearance="@style/TextAppearance.Body" />
 
@@ -97,6 +105,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="4dp"
                     android:background="@null"
+                    android:importantForAccessibility="no"
                     android:dropDownWidth="wrap_content"
                     android:spinnerMode="dropdown" />
 
@@ -107,14 +116,16 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginRight="16dp"
-                    android:background="?attr/support_separator" />
+                    android:background="?attr/support_separator"
+                    android:importantForAccessibility="no"/>
             </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="26dp">
+                android:layout_marginTop="26dp"
+                android:importantForAccessibility="no">
 
                 <LinearLayout
                     android:id="@+id/change_date_click_listener"
@@ -131,7 +142,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/doBy"
                         android:textColor="?attr/label_primary"
-                        android:textAppearance="@style/TextAppearance.Body"/>
+                        android:textAppearance="@style/TextAppearance.Body"
+                        android:importantForAccessibility="no"/>
 
                     <TextView
                         android:id="@+id/date_add_fragment"
@@ -139,7 +151,8 @@
                         android:layout_height="wrap_content"
                         android:clickable="false"
                         android:textColor="?attr/color_blue"
-                        android:textAppearance="@style/TextAppearance.Subhead"/>
+                        android:textAppearance="@style/TextAppearance.Subhead"
+                        android:importantForAccessibility="no"/>
 
                 </LinearLayout>
 
@@ -147,7 +160,8 @@
                     android:id="@+id/set_date_click_listener"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="end">
+                    android:layout_gravity="end"
+                    android:importantForAccessibility="no">
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/calendar_switch"
@@ -168,7 +182,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="40dp"
-                android:background="?attr/support_separator" />
+                android:background="?attr/support_separator"
+                android:importantForAccessibility="no"/>
 
             <LinearLayout
                 android:id="@+id/delete"
@@ -184,7 +199,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:srcCompat="@drawable/icon_delete"
-                    app:tint="?attr/color_red" />
+                    app:tint="?attr/color_red"
+                    android:importantForAccessibility="no"/>
 
                 <TextView
                     android:id="@+id/delete_text"
@@ -194,7 +210,8 @@
                     android:gravity="center"
                     android:text="@string/delete"
                     android:textAppearance="@style/TextAppearance.Body"
-                    android:textColor="?attr/color_red" />
+                    android:textColor="?attr/color_red"
+                    android:importantForAccessibility="no"/>
 
             </LinearLayout>
 

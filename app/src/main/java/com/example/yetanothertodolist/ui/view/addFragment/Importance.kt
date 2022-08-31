@@ -1,6 +1,7 @@
 package com.example.yetanothertodolist.ui.view.addFragment
 
-import java.lang.IllegalArgumentException
+import android.content.Context
+import com.example.yetanothertodolist.R
 
 /**
  * Вариации важности задания
@@ -15,5 +16,12 @@ enum class Importance {
             2 -> Important
             else -> throw IllegalArgumentException()
         }
+
+        fun getTranslatedName(importance: Importance, context: Context) =
+            when (importance) {
+                Low -> context.getText(R.string.low)
+                Basic -> context.getText(R.string.basic)
+                Important -> context.getText(R.string.important)
+            }
     }
 }

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/back_primary"
+    android:importantForAccessibility="no"
     android:clipToPadding="false">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -15,18 +16,20 @@
         android:layout_height="wrap_content"
         android:background="?attr/back_primary"
         android:fitsSystemWindows="true"
-        app:elevation="15dp">
+        app:elevation="15dp"
+        android:importantForAccessibility="no">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingtoolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
             android:fitsSystemWindows="true"
-            app:collapsedTitleGravity="bottom"
+            android:importantForAccessibility="yes"
+            app:collapsedTitleGravity="center_vertical|start"
             app:collapsedTitleTextAppearance="@style/TextAppearance.Title"
             app:collapsedTitleTextColor="?attr/label_primary"
             app:expandedTitleGravity="bottom"
+            app:expandedTitleMarginBottom="44dp"
             app:expandedTitleMarginStart="60dp"
             app:expandedTitleTextAppearance="@style/TextAppearance.LargeTitle"
             app:expandedTitleTextColor="?attr/label_primary"
@@ -39,6 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/back_primary"
+                android:importantForAccessibility="no"
                 app:layout_collapseMode="pin" />
 
             <TextView
@@ -47,6 +51,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginStart="60dp"
+                android:importantForAccessibility="yes"
+                android:focusable="true"
+                android:paddingBottom="12dp"
                 android:text="@string/completed"
                 android:textAppearance="@style/TextAppearance.Body"
                 android:textColor="?attr/label_tertiary"
@@ -58,15 +65,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="80dp"
                 android:layout_marginEnd="24dp"
+                android:importantForAccessibility="no"
                 app:layout_scrollFlags="snapMargins|scroll|exitUntilCollapsed">
 
                 <FrameLayout
                     android:id="@+id/settings_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:paddingRight="10dp"
+                    android:contentDescription="@string/options"
+                    android:importantForAccessibility="yes"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="12dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/eye_layout"
                     app:layout_constraintTop_toTopOf="parent">
@@ -77,6 +88,7 @@
                         android:layout_height="24dp"
                         android:background="@null"
                         android:clickable="false"
+                        android:importantForAccessibility="no"
                         app:srcCompat="@drawable/settings_icon"
                         app:tint="?attr/color_gray_light" />
                 </FrameLayout>
@@ -85,8 +97,12 @@
                     android:id="@+id/eye_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
+                    android:contentDescription="@string/showCompleted"
+                    android:importantForAccessibility="yes"
+                    android:paddingStart="12dp"
+                    android:paddingTop="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="12dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -97,6 +113,7 @@
                         android:layout_height="24dp"
                         android:background="@null"
                         android:clickable="false"
+                        android:importantForAccessibility="no"
                         app:srcCompat="@drawable/eye_icon"
                         app:tint="?attr/color_blue" />
                 </FrameLayout>
@@ -116,14 +133,16 @@
         android:clipToPadding="false"
         android:paddingTop="5dp"
         android:paddingBottom="20dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:importantForAccessibility="no">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/recycler_space"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipChildren="false"
-            android:clipToPadding="false">
+            android:clipToPadding="false"
+            android:importantForAccessibility="no">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -140,7 +159,9 @@
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                android:importantForAccessibility="yes"
+                android:contentDescription="@string/taskList">
 
             </androidx.recyclerview.widget.RecyclerView>
 
@@ -156,6 +177,9 @@
         android:layout_marginBottom="22dp"
         android:backgroundTint="?attr/color_blue"
         android:src="@drawable/icon_add"
-        app:tint="?attr/color_white" />
+        app:tint="?attr/color_white"
+        android:importantForAccessibility="yes"
+        android:contentDescription="@string/addTask"
+        android:accessibilityTraversalAfter="@id/completed"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
