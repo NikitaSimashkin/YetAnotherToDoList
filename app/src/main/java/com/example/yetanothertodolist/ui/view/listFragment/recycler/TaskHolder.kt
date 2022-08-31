@@ -72,6 +72,7 @@ class TaskHolder(
         checkBoxTask.isChecked = data.done
         changeTextStyle()
         checkBoxTask.setOnClickListener {
+            checkBoxTask.requestFocus()
             viewModel.changeCheckBox(data, checkBoxTask.isChecked)
             changeTextStyle()
         }

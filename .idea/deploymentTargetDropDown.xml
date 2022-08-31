@@ -7,12 +7,12 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\nikit\.android\avd\Nexus_5_API_30.avd" />
+            <value value="C:\Users\nikit\.android\avd\Nexus_6_API_30_1.avd" />
           </Key>
         </deviceKey>
       </Target>
     </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-08-31T14:27:09.508398900Z" />
+    <timeTargetWasSelectedWithDropDown value="2022-08-31T18:09:03.783889Z" />
     <runningDeviceTargetsSelectedWithDialog>
       <Target>
         <type value="RUNNING_DEVICE_TARGET" />

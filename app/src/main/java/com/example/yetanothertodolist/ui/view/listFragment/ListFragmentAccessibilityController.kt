@@ -91,9 +91,6 @@ class ListFragmentAccessibilityController @Inject constructor(
         setImportanceAccessibility(context, item, itemBinding)
         setDateAccessibility(item, context, itemBinding)
         setDescriptionAccessibility(itemBinding, item)
-        itemBinding.checkBoxTask.setOnClickListener {
-            itemBinding.checkBoxTask.requestFocus()
-        }
     }
 
     private fun setDescriptionAccessibility(itemBinding: TodoItemBinding, item: TodoItem) {
