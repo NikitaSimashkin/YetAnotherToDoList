@@ -66,7 +66,5 @@ class ListFragmentOpenCloseController @Inject constructor(
         val animation =
             TransitionInflater.from(fragment.context).inflateTransition(R.transition.move)
         fragment.sharedElementEnterTransition = animation
-        //fragment.enterTransition =
-        //    TransitionInflater.from(fragment.context).inflateTransition(R.transition.fade)
     }
 }

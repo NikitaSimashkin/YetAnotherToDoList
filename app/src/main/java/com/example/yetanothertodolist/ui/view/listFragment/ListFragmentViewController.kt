@@ -28,7 +28,8 @@ class ListFragmentViewController @Inject constructor(
     private val lifecycleOwner: LifecycleOwner,
     private val listFragmentOpenCloseController: ListFragmentOpenCloseController,
     private val themeSelector: ThemeSelector,
-    private val swipeController: SwipeController
+    private val swipeController: SwipeController,
+    private val listFragmentAccessibilityController: ListFragmentAccessibilityController
 ) {
     private val context = binding.recyclerView.context
 
@@ -38,6 +39,7 @@ class ListFragmentViewController @Inject constructor(
         setEyeButton()
         setSettingsButton()
         setRecyclerView()
+        listFragmentAccessibilityController.setUpAccessibility(binding)
     }
 
     private fun setRecyclerView() {

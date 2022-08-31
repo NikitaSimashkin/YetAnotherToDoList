@@ -18,14 +18,35 @@
     <string name="noInternet">Отсуствует соединение с интернетом, данные не синхронизированы</string>
     <string name="yesInternet">Интернет подключен, данные синхронизированы</string>
     <string name="later">Попробуйте позже</string>
-    <string name="light_theme">Светлая\nтема</string>
-    <string name="dark_theme">Темная\nтема</string>
-    <string name="system_theme">Систем.\nтема</string>
+    <string name="light_theme">Светлая тема</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="system_theme">Систем. тема</string>
     <string name="low">Низкая</string>
+    <string name="basic">Стандартная</string>
+    <string name="important">Высокая</string>
 
     <string-array name="importance">
         <item>Низкая</item>
         <item>Стандартная</item>
         <item>!! Высокая</item>
     </string-array>
+
+
+    <string name="options">Настройки</string>
+    <string name="taskList">Список заданий</string>
+    <string name="addTask">Добавить задание</string>
+    <string name="showCompleted">Показать выполненные задания</string>
+    <string name="done">Задание выполнено</string>
+    <string name="description">Описание задания: </string>
+    <string name="open">Открыть</string>
+    <string name="edit">Редактировать задание</string>
+    <string name="close">Закрыть</string>
+    <string name="close_add_fragment">Закрыть экран добавления задания</string>
+    <string name="save_task">Сохранить задание</string>
+    <string name="delete_task">Удалить задания</string>
+    <string name="set_deadline">Установить дедлайн</string>
+    <string name="close_date_picker">Закрыть экран выбора даты</string>
+    <string name="save_date">Сохранить дату</string>
+    <string name="set_or_change_deadline">Установить или изменить дедлайн</string>
+    <string name="select">Выбрать</string>
 </resources>

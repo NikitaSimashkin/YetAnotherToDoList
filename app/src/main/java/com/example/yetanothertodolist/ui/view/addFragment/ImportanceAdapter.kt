@@ -5,11 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import com.example.yetanothertodolist.other.getColor
 import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.di.AddFragmentComponentScope
 import com.example.yetanothertodolist.di.ResImportanceAdapter
 import com.example.yetanothertodolist.di.TextviewImportanceAdapter
+import com.example.yetanothertodolist.other.getColor
 import javax.inject.Inject
 
 /**
@@ -19,7 +19,8 @@ import javax.inject.Inject
 class ImportanceAdapter @Inject constructor(
     context: Context,
     @ResImportanceAdapter resource: Int,
-    @TextviewImportanceAdapter textViewResourceId: Int
+    @TextviewImportanceAdapter textViewResourceId: Int,
+    private val addFragmentAccessibilityController: AddFragmentAccessibilityController
 ) :
     ArrayAdapter<String>(context, resource, textViewResourceId) {
 
@@ -33,6 +34,7 @@ class ImportanceAdapter @Inject constructor(
         view.setPadding(0, view.paddingTop, view.paddingRight, view.paddingBottom)
 
         setItemsColor(position, view, getColor(context, R.attr.label_tertiary), getColor(context, R.attr.color_red))
+        addFragmentAccessibilityController.setUpImportantItemAccessibility(view, position)
 
         return view
     }
@@ -41,9 +43,11 @@ class ImportanceAdapter @Inject constructor(
         val view = super.getDropDownView(position, convertView, parent)
 
         setItemsColor(position, view, getColor(context, R.attr.label_primary), getColor(context, R.attr.color_red))
+        addFragmentAccessibilityController.setUpImportantItemAccessibility(view, position)
 
         return view
     }
+
 
     private fun setItemsColor(position: Int, view: View, colorLowBasic: Int, colorImportance: Int) {
         when (position) {

@@ -28,11 +28,12 @@
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/drawable/test.xml" value="0.2595" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/font/roboto.xml" value="0.284375" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/font/roboto_medium.xml" value="0.284375" />
+        <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout-v28/todo_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/activity_main.xml" value="0.2301038062283737" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/add_fragment.xml" value="0.264" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/change_theme_dialog.xml" value="0.264" />
-        <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/importance_item.xml" value="0.4" />
-        <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/list_fragment.xml" value="0.264" />
+        <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/importance_item.xml" value="0.6" />
+        <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/list_fragment.xml" value="0.5136842105263157" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/task_item.xml" value="0.6" />
         <entry key="..\:/Users/nikit/Desktop/Android/YetAnotherToDoList/app/src/main/res/layout/todo_item.xml" value="0.4" />
       </map>

@@ -14,8 +14,10 @@ import com.example.yetanothertodolist.Interactions.AddInteractions
 import com.example.yetanothertodolist.Interactions.ListInteractions
 import com.example.yetanothertodolist.ui.view.MainActivity.MainActivity
 import com.example.yetanothertodolist.util.atLastPosition
+import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -35,12 +37,12 @@ class AddTaskTest {
     @Before
     fun createServer() {
         server.start(8000)
-        server.enqueue(MockResponse())
-        server.enqueue(MockResponse())
-        server.enqueue(MockResponse())
-        server.enqueue(MockResponse())
-        server.enqueue(MockResponse())
-        server.enqueue(MockResponse())
+        val dispatcher = object: Dispatcher(){
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                return MockResponse().setResponseCode(500)
+            }
+        }
+        server.dispatcher = dispatcher
     }
 
     @After
@@ -52,18 +54,18 @@ class AddTaskTest {
     fun shouldAddTaskWhenSetDescriptionImportanceAndDate() {
         val randomString = UUID.randomUUID().toString()
         SystemClock.sleep(3500) // ждем когда уйдет снэкбар
-        ListInteractions.onPlusButton().perform(click()) // открываем экран добавления
+        ListInteractions.onPlusButton().perform(click())
 
-        AddInteractions.onDescription().perform(replaceText(randomString)) // добавляем описание
+        AddInteractions.onDescription().perform(replaceText(randomString))
 
-        AddInteractions.onImportance().perform(click()) // выбираем важность
+        AddInteractions.onImportance().perform(click())
         AddInteractions.onImportanceLow().perform(click())
 
-        AddInteractions.onSwitch().perform(click()) // выбираем дату
+        AddInteractions.onSwitch().perform(click())
         AddInteractions.onDatePicker().perform(PickerActions.setDate(2022, 8, 31))
         AddInteractions.onReady().perform(click())
 
-        AddInteractions.onSaveButton().perform(click()) // сохраняем задание
+        AddInteractions.onSaveButton().perform(click())
 
         ListInteractions.onList().check(matches(isDisplayed())) // проверяем, открылся ли лист
 
@@ -76,11 +78,11 @@ class AddTaskTest {
     @Test
     fun shouldShowSnackBarWhenTryToAddTaskWithoutDescription(){
         SystemClock.sleep(3500) // ждем когда уйдет снэкбар
-        ListInteractions.onPlusButton().perform(click()) // открываем экран добавления
+        ListInteractions.onPlusButton().perform(click())
 
-        AddInteractions.onSaveButton().perform(click()) // сохраняем
+        AddInteractions.onSaveButton().perform(click())
         AddInteractions.run{
-            onSnackBar().check(matches(isDisplayed())) // проверяем что есть снэкбар и что экран не закрылся
+            onSnackBar().check(matches(isDisplayed()))
             onDescription().check(matches(isDisplayed()))
         }
     }

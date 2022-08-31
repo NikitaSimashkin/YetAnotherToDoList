@@ -41,11 +41,6 @@ class AddFragmentOpenCloseController @Inject constructor(
         if (task == null) {
             fragment.exitTransition =
                 TransitionInflater.from(fragment.context).inflateTransition(R.transition.bottom)
-            /**
-             * если использовать popBackStack и очень быстро удалять элементы, то рано или поздно
-             * будет белый экран. Использование navigate ничего не меняет, все нужные сохраненные
-             * данные фрагменты живут во viewModel
-             */
             fragment.findNavController().navigate(R.id.action_addFragment_to_listFragment)
         } else {
             saveButton(task!!, binding)
@@ -66,8 +61,6 @@ class AddFragmentOpenCloseController @Inject constructor(
             null,
             extras
         )
-        //fragment.exitTransition =
-        //    TransitionInflater.from(fragment.context).inflateTransition(R.transition.fade)
 
         task = null
     }

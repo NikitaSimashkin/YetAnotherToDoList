@@ -10,6 +10,7 @@ import com.example.yetanothertodolist.databinding.TodoItemBinding
 import com.example.yetanothertodolist.other.getColor
 import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
 import com.example.yetanothertodolist.ui.view.addFragment.Importance
+import com.example.yetanothertodolist.ui.view.listFragment.ListFragmentAccessibilityController
 import com.example.yetanothertodolist.ui.view.listFragment.ListFragmentOpenCloseController
 
 /**
@@ -18,7 +19,8 @@ import com.example.yetanothertodolist.ui.view.listFragment.ListFragmentOpenClose
 class TaskHolder(
     itemView: View,
     private val viewModel: ListFragmentViewModel,
-    private val listFragmentOpenCloseController: ListFragmentOpenCloseController
+    private val listFragmentOpenCloseController: ListFragmentOpenCloseController,
+    private val listFragmentAccessibilityController: ListFragmentAccessibilityController
 ) :
     RecyclerView.ViewHolder(itemView) {
     private var binding: TodoItemBinding = TodoItemBinding.bind(itemView)
@@ -37,6 +39,8 @@ class TaskHolder(
         setImportance(item)
 
         setDate(item)
+
+        listFragmentAccessibilityController.setUpHolderAccessibility(binding, item)
     }
 
     private fun setDate(data: TodoItem) {
@@ -84,9 +88,9 @@ class TaskHolder(
             listFragmentOpenCloseController.taskHolderClose(binding, data)
         }
         todoItemLayout.setOnClickListener(close)
-        iconlayout.setOnClickListener(close)
-        imagebuttontasklayout.setOnClickListener(close)
-        datelayout.setOnClickListener(close)
+        iconImportance.setOnClickListener(close)
+        imageButtonTask.setOnClickListener(close)
+        dateText.setOnClickListener(close)
     }
 
     private fun changeTextStyle() = with(binding) {

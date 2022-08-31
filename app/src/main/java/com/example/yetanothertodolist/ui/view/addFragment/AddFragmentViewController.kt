@@ -21,7 +21,8 @@ class AddFragmentViewController @Inject constructor(
     private val binding: AddFragmentBinding,
     private val addModel: AddFragmentViewModel,
     private val adapter: ImportanceAdapter,
-    private val addFragmentOpenCloseController: AddFragmentOpenCloseController
+    private val addFragmentOpenCloseController: AddFragmentOpenCloseController,
+    private val addFragmentAccessibilityController: AddFragmentAccessibilityController
 ) {
     private lateinit var datePicker: DatePickerDialog
     private val context
@@ -36,6 +37,7 @@ class AddFragmentViewController @Inject constructor(
         saveButtonSetUp(task)
         setModelField()
         setListenerForModel()
+        addFragmentAccessibilityController.setUpAccessibility(binding)
     }
 
     private fun setListenerForModel() {
@@ -102,9 +104,11 @@ class AddFragmentViewController @Inject constructor(
     }
 
     private fun showDatePicker() {
-        if (!::datePicker.isInitialized)
+        if (!::datePicker.isInitialized) {
             createDatePicker()
+        }
         datePicker.show()
+        addFragmentAccessibilityController.setUpDatePickerAccessibility(datePicker)
     }
 
     private fun createDatePicker() {

@@ -12,8 +12,10 @@ import com.example.yetanothertodolist.Interactions.ListInteractions
 import com.example.yetanothertodolist.ui.view.MainActivity.MainActivity
 import com.example.yetanothertodolist.ui.view.listFragment.recycler.TaskHolder
 import com.example.yetanothertodolist.util.getText
+import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
@@ -34,17 +36,12 @@ class DeleteTaskTest {
     fun createServer() {
         server.start(8000)
 
-        // Делаем кучу пустых ответов с сервера, так как нам не важно что отвечает сервер -
-        // добавление/удаление дела работают одинаково при рабочем и не рабочем сервере
-        // Это сделано только для того чтобы в тесте не отправлять запросы на реальный сервер
-        server.enqueue(MockResponse())
-        server.enqueue(MockResponse())
-        server.enqueue(MockResponse())
-        server.enqueue(MockResponse())
-        server.enqueue(MockResponse())
-        server.enqueue(MockResponse())
-        server.enqueue(MockResponse())
-        server.enqueue(MockResponse())
+        val dispatcher = object: Dispatcher(){
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                return MockResponse().setResponseCode(500)
+            }
+        }
+        server.dispatcher = dispatcher
     }
 
     @After
@@ -57,9 +54,9 @@ class DeleteTaskTest {
      */
     @Test
     fun shouldDeleteCertainTaskWhenPressDeleteButton() {
-        SystemClock.sleep(1000) // он когда тему меняет, не может найти нужные вьюшки
+        SystemClock.sleep(1000)
         val firstDescription = Array(1) { "" }
-        ListInteractions.onList().perform( // запоминаем текст задания, на которое нажимаем
+        ListInteractions.onList().perform(
             actionOnItemAtPosition<TaskHolder>(
                 0,
                 getText(firstDescription, ListInteractions.getTextViewIdFromTaskHolder())
@@ -67,12 +64,12 @@ class DeleteTaskTest {
         )
         ListInteractions.onList().perform(actionOnItemAtPosition<TaskHolder>(0, click()))
 
-        AddInteractions.onDescription().check(matches(withText(firstDescription[0])))   // проверяем, что открылось
-                                                                                        // именно то задание
-        AddInteractions.onDeleteButton().perform(click()) // удаляем задание
+        AddInteractions.onDescription().check(matches(withText(firstDescription[0])))
+
+        AddInteractions.onDeleteButton().perform(click())
 
         ListInteractions.onList().run {
-            check(matches(isDisplayed())) // проверяем что открылся нужный фрагмент
+            check(matches(isDisplayed()))
             check(matches(not(hasDescendant(withText(firstDescription[0])))))
         }
     }
@@ -82,10 +79,10 @@ class DeleteTaskTest {
         SystemClock.sleep(3500)
         ListInteractions.onPlusButton().perform(click())
 
-        AddInteractions.onDescription().check(matches(isDisplayed())) // проверяем открытие нужного фрагмента
+        AddInteractions.onDescription().check(matches(isDisplayed()))
 
-        AddInteractions.onDeleteButton().perform(click()) // нажимаем на кнопку удаления
+        AddInteractions.onDeleteButton().perform(click())
 
-        AddInteractions.onDescription().check(matches(isDisplayed())) // проверяем, что фрагмен не закрылся
+        AddInteractions.onDescription().check(matches(isDisplayed()))
     }
 }

@@ -8,6 +8,7 @@ import com.example.yetanothertodolist.R
 import com.example.yetanothertodolist.di.ListFragmentComponentScope
 import com.example.yetanothertodolist.other.getColor
 import com.example.yetanothertodolist.ui.stateholders.ListFragmentViewModel
+import com.example.yetanothertodolist.ui.view.listFragment.ListFragmentAccessibilityController
 import com.example.yetanothertodolist.ui.view.listFragment.ListFragmentOpenCloseController
 import javax.inject.Inject
 
@@ -18,14 +19,15 @@ import javax.inject.Inject
 class TodoAdapter @Inject constructor(
     private val viewModel: ListFragmentViewModel,
     context: Context,
-    private val listFragmentOpenCloseController: ListFragmentOpenCloseController
+    private val listFragmentOpenCloseController: ListFragmentOpenCloseController,
+    private val listFragmentAccessibilityController: ListFragmentAccessibilityController
 ) : RecyclerView.Adapter<TaskHolder>() {
 
     var info = viewModel.tasks.value ?: listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.todo_item, parent, false)
-        return TaskHolder(view, viewModel, listFragmentOpenCloseController)
+        return TaskHolder(view, viewModel, listFragmentOpenCloseController, listFragmentAccessibilityController)
     }
 
     override fun onBindViewHolder(holder: TaskHolder, position: Int) {
